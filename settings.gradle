@@ -1,0 +1,4 @@
+rootProject.name = 'blog-buddy'
+
+/* apps */
+include ':applications:app-blog-buddy'
