@@ -43,7 +43,7 @@ class BlogSearchApiTest {
     @DisplayName("전달받은 Param을 서비스에 전달합니다.")
     @Test
     void blogSearch_passesParamToService() throws Exception {
-        String givenKeyword = "Kakao Landing";
+        final String givenKeyword = "Kakao Landing";
 
         mockMvc.perform(MockMvcRequestBuilders.get("/search/blog")
                         .param("keyword", givenKeyword))
