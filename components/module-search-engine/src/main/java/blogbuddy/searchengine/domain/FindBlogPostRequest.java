@@ -9,11 +9,11 @@ import lombok.Getter;
 @Builder(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class BlogPostFindRequest {
+public class FindBlogPostRequest {
     private final String query;
 
-    public static BlogPostFindRequest mapped(final String keyword) {
-        return BlogPostFindRequest.builder()
+    public static FindBlogPostRequest mapped(final String keyword) {
+        return FindBlogPostRequest.builder()
                 .query(keyword)
                 .build();
     }
