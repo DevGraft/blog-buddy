@@ -67,5 +67,15 @@ class ExtraFindBlogPostServiceTest {
         assertThat(response).isNotNull();
         assertThat(response.meta()).isNotNull();
         assertThat(response.meta().totalCount()).isEqualTo(givenResponse.getMeta().getTotalCount());
+        assertThat(response.meta().pageableCount()).isEqualTo(givenResponse.getMeta().getPageableCount());
+        assertThat(response.meta().isEnd()).isEqualTo(givenResponse.getMeta().isEnd());
+        assertThat(response.documents()).isNotNull();
+        assertThat(response.documents()).isNotEmpty();
+        assertThat(response.documents().get(0).title()).isEqualTo(givenResponse.getDocuments().get(0).getTitle());
+        assertThat(response.documents().get(0).contents()).isEqualTo(givenResponse.getDocuments().get(0).getContents());
+        assertThat(response.documents().get(0).blogName()).isEqualTo(givenResponse.getDocuments().get(0).getBlogName());
+        assertThat(response.documents().get(0).url()).isEqualTo(givenResponse.getDocuments().get(0).getUrl());
+        assertThat(response.documents().get(0).thumbnail()).isEqualTo(givenResponse.getDocuments().get(0).getThumbnail());
+        assertThat(response.documents().get(0).datetime()).isEqualTo(givenResponse.getDocuments().get(0).getDatetime());
     }
 }

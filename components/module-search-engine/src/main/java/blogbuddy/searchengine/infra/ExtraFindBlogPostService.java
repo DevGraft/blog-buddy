@@ -20,12 +20,11 @@ public class ExtraFindBlogPostService implements FindBlogPostService {
         // 요청
         try {
             final SearchBlogResponse searchBlogResponse = kakaoSearchClient.searchBlog(request.getQuery(), null, null, null);
-
+            return FindBlogPostResponse.mapped(searchBlogResponse);
         } catch (KakaoSearchException e) {
             throw RequestException.of(HttpStatus.valueOf(e.getStatus()), e.getMessage());
         }
         // 결과 매핑 후 반환
         // 예외처리 발생 시 핸들링
-        return null;
     }
 }
