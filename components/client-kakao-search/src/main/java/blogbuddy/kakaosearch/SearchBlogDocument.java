@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.OffsetDateTime;
+
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
@@ -16,5 +18,5 @@ public class SearchBlogDocument {
     @JsonProperty("blogname")
     private String blogName;
     private String thumbnail;
-    private String datetime;
+    private OffsetDateTime datetime;
 }

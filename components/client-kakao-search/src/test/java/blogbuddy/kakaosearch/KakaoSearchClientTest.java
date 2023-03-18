@@ -1,8 +1,7 @@
 package blogbuddy.kakaosearch;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
+import blogbuddy.mapper.ObjectMapperConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import feign.Feign;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
@@ -11,7 +10,6 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.jackson.JsonComponentModule;
 import org.springframework.cloud.openfeign.support.SpringMvcContract;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -21,12 +19,7 @@ class KakaoSearchClientTest {
 
     @BeforeEach
     void setUp() {
-        ObjectMapper objectMapper = new ObjectMapper()
-                .registerModule(new JsonComponentModule())
-                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
-                .configure(SerializationFeature.INDENT_OUTPUT, true);
+        final ObjectMapper objectMapper = new ObjectMapperConfig().objectMapper();
 
         kakaoSearchClient = Feign.builder()
                 .client(new OkHttpClient())

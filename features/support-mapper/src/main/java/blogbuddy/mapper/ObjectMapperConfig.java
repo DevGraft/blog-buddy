@@ -1,4 +1,4 @@
-package blogbuddy.searchengine.config;
+package blogbuddy.mapper;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
