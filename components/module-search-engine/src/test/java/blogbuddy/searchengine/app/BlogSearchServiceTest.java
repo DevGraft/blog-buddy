@@ -67,7 +67,7 @@ class BlogSearchServiceTest {
     void searchPost_returnValue() {
         final String givenKeyword = "kakaoLanding";
         final BlogPostFindRequest givenRequest = BlogPostFindRequest.mapped(givenKeyword);
-        final BlogPostFindItem givenItem = new BlogPostFindItem("title", "contents-kakaoLanding", "url", "thumbnail", LocalDateTime.now());
+        final BlogPostFindItem givenItem = new BlogPostFindItem("title", "contents-kakaoLanding", "url", "blogName","thumbnail", LocalDateTime.now());
         final BlogPostFindResponse givenResponse = new BlogPostFindResponse(1, 1, true, List.of(givenItem));
         BDDMockito.given(mockBlogPostFindService.findBlog(refEq(givenRequest))).willReturn(givenResponse);
 
@@ -80,6 +80,7 @@ class BlogSearchServiceTest {
         assertThat(response.getDocuments().get(0).getTitle()).isEqualTo(givenItem.getTitle());
         assertThat(response.getDocuments().get(0).getContents()).isEqualTo(givenItem.getContents());
         assertThat(response.getDocuments().get(0).getUrl()).isEqualTo(givenItem.getUrl());
+        assertThat(response.getDocuments().get(0).getBlogName()).isEqualTo(givenItem.getBlogName());
         assertThat(response.getDocuments().get(0).getThumbnail()).isEqualTo(givenItem.getThumbnail());
         assertThat(response.getDocuments().get(0).getDatetime()).isEqualTo(givenItem.getDatetime());
     }
