@@ -3,7 +3,7 @@ package blogbuddy.searchengine.domain;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @AllArgsConstructor
 @Getter
@@ -13,5 +13,5 @@ public class BlogPostFindItem {
     private final String url;
     private final String blogName;
     private final String thumbnail;
-    private final LocalDateTime datetime;
+    private final OffsetDateTime datetime;
 }

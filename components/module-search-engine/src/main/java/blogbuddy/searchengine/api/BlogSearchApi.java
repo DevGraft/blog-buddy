@@ -15,8 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class BlogSearchApi {
     private final BlogSearchService blogSearchService;
+
     @GetMapping
-    public void blogSearch(@RequestParam(name = "keyword", required = false) String keyword) {
-        final SearchPostResponse searchPostResponse = blogSearchService.searchPost(keyword);
+    public SearchPostResponse blogSearch(@RequestParam(name = "keyword", required = false) String keyword) {
+        return blogSearchService.searchPost(keyword);
     }
 }

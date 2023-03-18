@@ -18,7 +18,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -67,7 +67,7 @@ class BlogSearchServiceTest {
     void searchPost_returnValue() {
         final String givenKeyword = "kakaoLanding";
         final BlogPostFindRequest givenRequest = BlogPostFindRequest.mapped(givenKeyword);
-        final BlogPostFindItem givenItem = new BlogPostFindItem("title", "contents-kakaoLanding", "url", "blogName","thumbnail", LocalDateTime.now());
+        final BlogPostFindItem givenItem = new BlogPostFindItem("title", "contents-kakaoLanding", "url", "blogName","thumbnail", OffsetDateTime.now());
         final BlogPostFindResponse givenResponse = new BlogPostFindResponse(1, 1, true, List.of(givenItem));
         BDDMockito.given(mockBlogPostFindService.findBlog(refEq(givenRequest))).willReturn(givenResponse);
 
