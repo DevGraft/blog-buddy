@@ -2,5 +2,7 @@ rootProject.name = 'blog-buddy'
 
 /* features */
 include ':features:support-advice'
+/* components */
+include ':components:module-search-engine'
 /* apps */
 include ':applications:app-blog-buddy'
