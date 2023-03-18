@@ -1,0 +1,6 @@
+rootProject.name = 'blog-buddy'
+
+/* features */
+include ':features:support-advice'
+/* apps */
+include ':applications:app-blog-buddy'
