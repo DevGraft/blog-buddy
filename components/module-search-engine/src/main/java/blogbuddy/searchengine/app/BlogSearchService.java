@@ -1,5 +1,6 @@
 package blogbuddy.searchengine.app;
 
+import blogbuddy.searchengine.domain.BlogPostFindRequest;
 import blogbuddy.searchengine.domain.BlogPostFindService;
 import blogbuddy.support.advice.exception.RequestException;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class BlogSearchService {
             throw RequestException.of(HttpStatus.BAD_REQUEST, "keyword 입력은 공백일 수 없습니다.");
         }
         // 검색 요청
-
+        blogPostFindService.findBlog(BlogPostFindRequest.mapped(keyword));
         // 이벤트 발생
         // 결과 반환
     }
