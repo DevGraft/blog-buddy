@@ -73,15 +73,15 @@ class BlogSearchServiceTest {
 
         final SearchPostResponse response = blogSearchService.searchPost(givenKeyword);
 
-        assertThat(response.getTotalCount()).isEqualTo(givenResponse.getTotalCount());
-        assertThat(response.getPageableCount()).isEqualTo(givenResponse.getPageableCount());
+        assertThat(response.totalCount()).isEqualTo(givenResponse.getTotalCount());
+        assertThat(response.pageableCount()).isEqualTo(givenResponse.getPageableCount());
         assertThat(response.isEnd()).isEqualTo(givenResponse.isEnd());
-        assertThat(response.getDocuments()).isNotEmpty();
-        assertThat(response.getDocuments().get(0).getTitle()).isEqualTo(givenItem.getTitle());
-        assertThat(response.getDocuments().get(0).getContents()).isEqualTo(givenItem.getContents());
-        assertThat(response.getDocuments().get(0).getUrl()).isEqualTo(givenItem.getUrl());
-        assertThat(response.getDocuments().get(0).getBlogName()).isEqualTo(givenItem.getBlogName());
-        assertThat(response.getDocuments().get(0).getThumbnail()).isEqualTo(givenItem.getThumbnail());
-        assertThat(response.getDocuments().get(0).getDatetime()).isEqualTo(givenItem.getDatetime());
+        assertThat(response.documents()).isNotEmpty();
+        assertThat(response.documents().get(0).title()).isEqualTo(givenItem.getTitle());
+        assertThat(response.documents().get(0).contents()).isEqualTo(givenItem.getContents());
+        assertThat(response.documents().get(0).url()).isEqualTo(givenItem.getUrl());
+        assertThat(response.documents().get(0).blogName()).isEqualTo(givenItem.getBlogName());
+        assertThat(response.documents().get(0).thumbnail()).isEqualTo(givenItem.getThumbnail());
+        assertThat(response.documents().get(0).datetime()).isEqualTo(givenItem.getDatetime());
     }
 }

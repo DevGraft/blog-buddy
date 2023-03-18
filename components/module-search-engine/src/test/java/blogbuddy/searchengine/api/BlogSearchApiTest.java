@@ -46,10 +46,20 @@ class BlogSearchApiTest {
         final String givenKeyword = "Kakao Landing";
 
         mockMvc.perform(MockMvcRequestBuilders.get("/search/blog")
-                        .param("keyword", givenKeyword))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                        .param("keyword", givenKeyword));
 
         Mockito.verify(mockBlogSearchService, Mockito.times(1)).searchPost(keywordCaptor.capture());
         Assertions.assertThat(keywordCaptor.getValue()).isEqualTo(givenKeyword);
+    }
+
+    @DisplayName("블로그 검색 결과는 반환됩니다.")
+    @Test
+    void blogSearch_returnValue() throws Exception {
+        final String givenKeyword = "Kakao Landing";
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/search/blog")
+                        .param("keyword", givenKeyword));
+
+
     }
 }

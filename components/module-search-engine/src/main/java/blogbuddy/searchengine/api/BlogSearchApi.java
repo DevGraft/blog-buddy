@@ -2,6 +2,7 @@ package blogbuddy.searchengine.api;
 
 
 import blogbuddy.searchengine.app.BlogSearchService;
+import blogbuddy.searchengine.app.SearchPostResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,6 @@ public class BlogSearchApi {
     private final BlogSearchService blogSearchService;
     @GetMapping
     public void blogSearch(@RequestParam(name = "keyword", required = false) String keyword) {
-        blogSearchService.searchPost(keyword);
+        final SearchPostResponse searchPostResponse = blogSearchService.searchPost(keyword);
     }
 }
