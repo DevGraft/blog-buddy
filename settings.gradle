@@ -4,5 +4,6 @@ rootProject.name = 'blog-buddy'
 include ':features:support-advice'
 /* components */
 include ':components:module-search-engine'
+include ':components:client-kakao-search'
 /* apps */
 include ':applications:app-blog-buddy'
