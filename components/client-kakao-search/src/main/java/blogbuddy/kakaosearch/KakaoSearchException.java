@@ -16,6 +16,6 @@ public class KakaoSearchException extends Exception {
     }
 
     public static KakaoSearchException mapped(final  int httpStatus, final String errorType, final String message) {
-        return new KakaoSearchException(httpStatus, message, errorType);
+        return new KakaoSearchException(httpStatus, errorType, message);
     }
 }
