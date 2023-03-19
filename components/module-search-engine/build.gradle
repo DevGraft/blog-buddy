@@ -2,4 +2,5 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation(project(':features:support-advice'))
     implementation(project(':components:client-kakao-search'))
+    implementation(project(':features:support-event-search-engine'))
 }
