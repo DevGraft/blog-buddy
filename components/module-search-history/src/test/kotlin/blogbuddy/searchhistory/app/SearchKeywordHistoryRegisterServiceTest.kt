@@ -1,7 +1,7 @@
 package blogbuddy.searchhistory.app
 
-import blogbuddy.searchhistory.domain.SearchBlogHistory
-import blogbuddy.searchhistory.domain.SearchBlogHistoryRepository
+import blogbuddy.searchhistory.domain.SearchKeywordHistory
+import blogbuddy.searchhistory.domain.SearchKeywordHistoryRepository
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -14,22 +14,22 @@ private fun <T> capture(argumentCaptor: ArgumentCaptor<T>): T = argumentCaptor.c
 
 @ExtendWith(MockitoExtension::class)
 @DisplayName("블로그 검색 기록 저장 기능 테스트")
-internal class SearchHistoryRegisterServiceTest {
+internal class SearchKeywordHistoryRegisterServiceTest {
     @InjectMocks
-    private lateinit var searchHistoryRegisterService: SearchHistoryRegisterService
+    private lateinit var searchKeywordHistoryRegisterService: SearchKeywordHistoryRegisterService
     @Mock
-    private lateinit var mockSearchBlogHistoryRepository: SearchBlogHistoryRepository
+    private lateinit var mockSearchKeywordHistoryRepository: SearchKeywordHistoryRepository
     @Captor
-    private lateinit var historyCaptor: ArgumentCaptor<SearchBlogHistory>
+    private lateinit var historyCaptor: ArgumentCaptor<SearchKeywordHistory>
 
     @DisplayName("검색 기록은 repository save()로 저장됩니다.")
     @Test
     internal fun register_historySaveToRepository() {
-        val givenRequest = SearchHistoryRegisterDataRequest("keyword", LocalDateTime.now())
+        val givenRequest = SearchKeywordHistoryRegisterDataRequest("keyword", LocalDateTime.now())
 
-        searchHistoryRegisterService.register(givenRequest)
+        searchKeywordHistoryRegisterService.register(givenRequest)
 
-        Mockito.verify(mockSearchBlogHistoryRepository, Mockito.times(1)).save(capture(historyCaptor))
+        Mockito.verify(mockSearchKeywordHistoryRepository, Mockito.times(1)).save(capture(historyCaptor))
         Assertions.assertThat(historyCaptor.value).isNotNull
         Assertions.assertThat(historyCaptor.value.keyword).isEqualTo(givenRequest.keyword)
         Assertions.assertThat(historyCaptor.value.searchAt).isEqualTo(givenRequest.registerDateTime)

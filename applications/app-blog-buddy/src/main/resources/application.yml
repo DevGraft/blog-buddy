@@ -1,4 +1,7 @@
 spring:
+  config:
+    import:
+     - db.properties
   cloud:
     compatibility-verifier:
       enabled: false

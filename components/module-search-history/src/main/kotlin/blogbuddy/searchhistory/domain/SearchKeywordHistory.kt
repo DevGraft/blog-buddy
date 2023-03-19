@@ -4,9 +4,9 @@ import lombok.Builder
 import java.time.LocalDateTime
 import javax.persistence.*
 
-@Table(name = "SearchBlogHistory", indexes = [Index(name = "idx_keyword", columnList = "keyword")])
+@Table(name = "SearchKeywordHistory", indexes = [Index(name = "idx_keyword", columnList = "keyword")])
 @Entity
-class SearchBlogHistory @Builder constructor(
+class SearchKeywordHistory @Builder constructor(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,

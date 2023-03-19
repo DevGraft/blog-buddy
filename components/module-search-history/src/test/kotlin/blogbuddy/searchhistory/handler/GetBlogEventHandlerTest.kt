@@ -1,7 +1,7 @@
 package blogbuddy.searchhistory.handler
 
-import blogbuddy.searchhistory.app.SearchHistoryRegisterDataRequest
-import blogbuddy.searchhistory.app.SearchHistoryRegisterService
+import blogbuddy.searchhistory.app.SearchKeywordHistoryRegisterDataRequest
+import blogbuddy.searchhistory.app.SearchKeywordHistoryRegisterService
 import blogbuddy.support.event.searchengine.GetBlogEvent
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.DisplayName
@@ -19,9 +19,9 @@ internal class GetBlogEventHandlerTest {
     @InjectMocks
     private lateinit var blogEventHandler: GetBlogEventHandler
     @Mock
-    private lateinit var mockSearchHistoryRegisterService: SearchHistoryRegisterService
+    private lateinit var mockSearchKeywordHistoryRegisterService: SearchKeywordHistoryRegisterService
     @Captor
-    private lateinit var dataRequestCaptor: ArgumentCaptor<SearchHistoryRegisterDataRequest>
+    private lateinit var dataRequestCaptor: ArgumentCaptor<SearchKeywordHistoryRegisterDataRequest>
 
 
     @DisplayName("블로그 조회 이벤트 정보를 서비스에게 전달합니다.")
@@ -31,7 +31,7 @@ internal class GetBlogEventHandlerTest {
 
         blogEventHandler.handle(givenEvent)
 
-        Mockito.verify(mockSearchHistoryRegisterService, Mockito.times(1)).register(capture(dataRequestCaptor))
+        Mockito.verify(mockSearchKeywordHistoryRegisterService, Mockito.times(1)).register(capture(dataRequestCaptor))
         Assertions.assertThat(dataRequestCaptor.value).isNotNull
         Assertions.assertThat(dataRequestCaptor.value.keyword).isEqualTo(givenEvent.keyword)
         Assertions.assertThat(dataRequestCaptor.value.registerDateTime).isEqualTo(givenEvent.registerDatetime)
