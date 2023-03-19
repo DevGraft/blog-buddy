@@ -13,12 +13,13 @@ public class FindBlogPostRequest {
     private final String query;
     private final Integer page;
     private final Integer size;
-
-    public static FindBlogPostRequest mapped(final String keyword, final Integer page, final Integer size) {
+    private final String sort;
+    public static FindBlogPostRequest mapped(final String keyword, final Integer page, final Integer size, final String sort) {
         return FindBlogPostRequest.builder()
                 .query(keyword)
                 .page(page)
                 .size(size)
+                .sort(sort)
                 .build();
     }
 }

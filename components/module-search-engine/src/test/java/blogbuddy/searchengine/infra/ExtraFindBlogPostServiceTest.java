@@ -41,12 +41,14 @@ class ExtraFindBlogPostServiceTest {
     private ArgumentCaptor<Integer> pageCaptor;
     @Captor
     private ArgumentCaptor<Integer> sizeCaptor;
+    @Captor
+    private ArgumentCaptor<String> sortCaptor;
 
     @DisplayName("kakao api 호출 실패 시 예외처리가 핸들링되어야합니다.")
     @Test
     void findBlog_catchAndThrowsRequestException() throws KakaoSearchException {
         final String givenQuery = "givenQuery";
-        final FindBlogPostRequest givenRequest = FindBlogPostRequest.mapped(givenQuery, null, null);
+        final FindBlogPostRequest givenRequest = FindBlogPostRequest.mapped(givenQuery, null, null, null);
         final String givenErrorMessage = "message";
         final int givenStatus = 400;
         BDDMockito.given(mockKakaoSearchClient.searchBlog(eq(givenQuery), any(), any(), any()))
@@ -66,24 +68,26 @@ class ExtraFindBlogPostServiceTest {
         final String givenQuery = "givenQuery";
         final int givenPage = 1;
         final int givenSize = 10;
-        final FindBlogPostRequest givenRequest = FindBlogPostRequest.mapped(givenQuery, givenPage, givenSize);
+        final String givenSort = "recency";
+        final FindBlogPostRequest givenRequest = FindBlogPostRequest.mapped(givenQuery, givenPage, givenSize, givenSort);
 
         try {
             extraBlogPostFindService.findBlog(givenRequest);
         } catch (Throwable ignored) {}
 
         Mockito.verify(mockKakaoSearchClient, Mockito.times(givenPage))
-                .searchBlog(queryCaptor.capture(), any(), pageCaptor.capture(), sizeCaptor.capture());
+                .searchBlog(queryCaptor.capture(), sortCaptor.capture(), pageCaptor.capture(), sizeCaptor.capture());
 
         Assertions.assertThat(queryCaptor.getValue()).isEqualTo(givenQuery);
         Assertions.assertThat(pageCaptor.getValue()).isEqualTo(givenPage);
         Assertions.assertThat(sizeCaptor.getValue()).isEqualTo(givenSize);
+        Assertions.assertThat(sortCaptor.getValue()).isEqualTo(givenSort);
     }
 
     @DisplayName("블로그 조회 성공 결과는 반환되어야합니다.(kakaoClient기준)")
     @Test
     void findBlog_kakaoClient_returnValue() throws KakaoSearchException {
-        final FindBlogPostRequest givenRequest = FindBlogPostRequest.mapped("givenQuery", 1, 10);
+        final FindBlogPostRequest givenRequest = FindBlogPostRequest.mapped("givenQuery", null, null, null);
         final SearchBlogMeta givenMeta = new SearchBlogMeta(1, 1, true);
         final SearchBlogDocument givenDocument = new SearchBlogDocument("title", "contents", "url", "blogName", "thumbnail", OffsetDateTime.now());
         final List<SearchBlogDocument> givenDocuments = List.of(givenDocument);

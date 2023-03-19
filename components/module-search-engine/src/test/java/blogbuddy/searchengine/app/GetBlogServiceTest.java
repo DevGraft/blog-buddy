@@ -25,7 +25,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.refEq;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("블로그 검색 Service")
@@ -42,7 +41,7 @@ class GetBlogServiceTest {
     void searchPost_keywordValidationCheck() {
         final String givenKeyword = "";
 
-        final RequestException exception = assertThrows(RequestException.class, () -> getBlogService.getBlog(givenKeyword, null, null));
+        final RequestException exception = assertThrows(RequestException.class, () -> getBlogService.getBlog(givenKeyword, null, null, null));
 
         assertThat(exception).isNotNull();
         assertThat(exception.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -55,17 +54,19 @@ class GetBlogServiceTest {
         final String givenKeyword = "kakaoLanding";
         final Integer givenPage = 1;
         final Integer givenSize = 10;
+        final String givenSort = "recency";
         final FindBlogPostMeta givenMeta = new FindBlogPostMeta(1, 1, true);
         final FindBlogPostResponse givenResponse = new FindBlogPostResponse(givenMeta, List.of());
         BDDMockito.given(mockFindBlogPostService.findBlog(any())).willReturn(givenResponse);
 
-        getBlogService.getBlog(givenKeyword, givenPage, givenSize);
+        getBlogService.getBlog(givenKeyword, givenPage, givenSize, givenSort);
 
         Mockito.verify(mockFindBlogPostService, Mockito.times(1))
                 .findBlog(blogPostFindRequestArgumentCaptor.capture());
         Assertions.assertThat(blogPostFindRequestArgumentCaptor.getValue().getQuery()).isEqualTo(givenKeyword);
         Assertions.assertThat(blogPostFindRequestArgumentCaptor.getValue().getPage()).isEqualTo(givenPage);
         Assertions.assertThat(blogPostFindRequestArgumentCaptor.getValue().getSize()).isEqualTo(givenSize);
+        Assertions.assertThat(blogPostFindRequestArgumentCaptor.getValue().getSort()).isEqualTo(givenSort);
     }
 
     @DisplayName("블로그 글 검색의 결과는 반환됩니다.")
@@ -74,13 +75,12 @@ class GetBlogServiceTest {
         final String givenKeyword = "kakaoLanding";
         final Integer givenPage = 1;
         final Integer givenSize = 10;
-        final FindBlogPostRequest givenRequest = FindBlogPostRequest.mapped(givenKeyword, givenPage, givenSize);
         final FindBlogPostMeta givenMeta = new FindBlogPostMeta(1, 1, true);
         final FindBlogPostDocument givenDocument = new FindBlogPostDocument("title", "contents-kakaoLanding", "url", "blogName","thumbnail", OffsetDateTime.now());
         final FindBlogPostResponse givenResponse = new FindBlogPostResponse(givenMeta, List.of(givenDocument));
-        BDDMockito.given(mockFindBlogPostService.findBlog(refEq(givenRequest))).willReturn(givenResponse);
+        BDDMockito.given(mockFindBlogPostService.findBlog(any())).willReturn(givenResponse);
 
-        final GetBlogResponse response = getBlogService.getBlog(givenKeyword, givenPage, givenSize);
+        final GetBlogResponse response = getBlogService.getBlog("kakaoLanding", 1, 10, "accuracy");
 
         assertThat(response.meta()).isNotNull();
         assertThat(response.meta().totalCount()).isEqualTo(givenResponse.meta().totalCount());
