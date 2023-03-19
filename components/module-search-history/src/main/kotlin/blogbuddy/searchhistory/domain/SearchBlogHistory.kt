@@ -6,7 +6,7 @@ import javax.persistence.*
 
 @Table(name = "SearchBlogHistory", indexes = [Index(name = "idx_keyword", columnList = "keyword")])
 @Entity
-class SearchBlogHistory @Builder private constructor(
+class SearchBlogHistory @Builder constructor(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
