@@ -1,0 +1,8 @@
+spring:
+  cloud:
+    compatibility-verifier:
+      enabled: false
+client:
+  kakao:
+    url: https://dapi.kakao.com
+    app-key: KakaoAK cfb90d2eb84ca8aa1e74e124d10d8e1f
