@@ -8,12 +8,16 @@ import blogbuddy.kakaosearch.SearchBlogResponse;
 import blogbuddy.searchengine.domain.FindBlogPostRequest;
 import blogbuddy.searchengine.domain.FindBlogPostResponse;
 import blogbuddy.support.advice.exception.RequestException;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.BDDMockito;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.OffsetDateTime;
@@ -31,14 +35,20 @@ class ExtraFindBlogPostServiceTest {
     private ExtraFindBlogPostService extraBlogPostFindService;
     @Mock
     private KakaoSearchClient mockKakaoSearchClient;
+    @Captor
+    private ArgumentCaptor<String> queryCaptor;
+    @Captor
+    private ArgumentCaptor<Integer> pageCaptor;
+    @Captor
+    private ArgumentCaptor<Integer> sizeCaptor;
 
     @DisplayName("kakao api 호출 실패 시 예외처리가 핸들링되어야합니다.")
     @Test
     void findBlog_catchAndThrowsRequestException() throws KakaoSearchException {
         final String givenQuery = "givenQuery";
+        final FindBlogPostRequest givenRequest = FindBlogPostRequest.mapped(givenQuery, null, null);
         final String givenErrorMessage = "message";
         final int givenStatus = 400;
-        final FindBlogPostRequest givenRequest = FindBlogPostRequest.mapped(givenQuery);
         BDDMockito.given(mockKakaoSearchClient.searchBlog(eq(givenQuery), any(), any(), any()))
                 .willThrow(KakaoSearchException.mapped(givenStatus, "errorType", givenErrorMessage));
 
@@ -50,15 +60,34 @@ class ExtraFindBlogPostServiceTest {
         assertThat(exception.getStatus().value()).isEqualTo(givenStatus);
     }
 
-    @DisplayName("블로그 조회 성공 결과는 반환되어야합니다.")
+    @DisplayName("전달받은 param을 kakaoClient에 전달합니다.")
     @Test
-    void findBlog_returnValue() throws KakaoSearchException {
-        final FindBlogPostRequest givenRequest = FindBlogPostRequest.mapped("givenQuery");
+    void findBlog_passesParamToKakaoClient() throws KakaoSearchException {
+        final String givenQuery = "givenQuery";
+        final int givenPage = 1;
+        final int givenSize = 10;
+        final FindBlogPostRequest givenRequest = FindBlogPostRequest.mapped(givenQuery, givenPage, givenSize);
+
+        try {
+            extraBlogPostFindService.findBlog(givenRequest);
+        } catch (Throwable ignored) {}
+
+        Mockito.verify(mockKakaoSearchClient, Mockito.times(givenPage))
+                .searchBlog(queryCaptor.capture(), any(), pageCaptor.capture(), sizeCaptor.capture());
+
+        Assertions.assertThat(queryCaptor.getValue()).isEqualTo(givenQuery);
+        Assertions.assertThat(pageCaptor.getValue()).isEqualTo(givenPage);
+        Assertions.assertThat(sizeCaptor.getValue()).isEqualTo(givenSize);
+    }
+
+    @DisplayName("블로그 조회 성공 결과는 반환되어야합니다.(kakaoClient기준)")
+    @Test
+    void findBlog_kakaoClient_returnValue() throws KakaoSearchException {
+        final FindBlogPostRequest givenRequest = FindBlogPostRequest.mapped("givenQuery", 1, 10);
         final SearchBlogMeta givenMeta = new SearchBlogMeta(1, 1, true);
         final SearchBlogDocument givenDocument = new SearchBlogDocument("title", "contents", "url", "blogName", "thumbnail", OffsetDateTime.now());
         final List<SearchBlogDocument> givenDocuments = List.of(givenDocument);
         final SearchBlogResponse givenResponse = new SearchBlogResponse(givenMeta, givenDocuments);
-
         BDDMockito.given(mockKakaoSearchClient.searchBlog(any(), any(), any(), any()))
                 .willReturn(givenResponse);
 

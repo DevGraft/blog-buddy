@@ -11,10 +11,14 @@ import lombok.Getter;
 @Getter
 public class FindBlogPostRequest {
     private final String query;
+    private final Integer page;
+    private final Integer size;
 
-    public static FindBlogPostRequest mapped(final String keyword) {
+    public static FindBlogPostRequest mapped(final String keyword, final Integer page, final Integer size) {
         return FindBlogPostRequest.builder()
                 .query(keyword)
+                .page(page)
+                .size(size)
                 .build();
     }
 }

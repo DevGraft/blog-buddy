@@ -19,7 +19,7 @@ public class GetBlogService {
             throw RequestException.of(HttpStatus.BAD_REQUEST, "keyword 입력은 공백일 수 없습니다.");
         }
         // 검색 요청
-        final FindBlogPostResponse response = findBlogPostService.findBlog(FindBlogPostRequest.mapped(keyword));
+        final FindBlogPostResponse response = findBlogPostService.findBlog(FindBlogPostRequest.mapped(keyword, page, size));
         // 이벤트 발생
         // 결과 반환
         return GetBlogResponse.mapped(response);

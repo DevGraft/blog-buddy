@@ -53,28 +53,34 @@ class GetBlogServiceTest {
     @Test
     void searchPost_callFindBlogToBlogPostFindService() {
         final String givenKeyword = "kakaoLanding";
+        final Integer givenPage = 1;
+        final Integer givenSize = 10;
         final FindBlogPostMeta givenMeta = new FindBlogPostMeta(1, 1, true);
         final FindBlogPostResponse givenResponse = new FindBlogPostResponse(givenMeta, List.of());
         BDDMockito.given(mockFindBlogPostService.findBlog(any())).willReturn(givenResponse);
 
-        getBlogService.getBlog(givenKeyword, null, null);
+        getBlogService.getBlog(givenKeyword, givenPage, givenSize);
 
         Mockito.verify(mockFindBlogPostService, Mockito.times(1))
                 .findBlog(blogPostFindRequestArgumentCaptor.capture());
         Assertions.assertThat(blogPostFindRequestArgumentCaptor.getValue().getQuery()).isEqualTo(givenKeyword);
+        Assertions.assertThat(blogPostFindRequestArgumentCaptor.getValue().getPage()).isEqualTo(givenPage);
+        Assertions.assertThat(blogPostFindRequestArgumentCaptor.getValue().getSize()).isEqualTo(givenSize);
     }
 
     @DisplayName("블로그 글 검색의 결과는 반환됩니다.")
     @Test
     void searchPost_returnValue() {
         final String givenKeyword = "kakaoLanding";
-        final FindBlogPostRequest givenRequest = FindBlogPostRequest.mapped(givenKeyword);
+        final Integer givenPage = 1;
+        final Integer givenSize = 10;
+        final FindBlogPostRequest givenRequest = FindBlogPostRequest.mapped(givenKeyword, givenPage, givenSize);
         final FindBlogPostMeta givenMeta = new FindBlogPostMeta(1, 1, true);
         final FindBlogPostDocument givenDocument = new FindBlogPostDocument("title", "contents-kakaoLanding", "url", "blogName","thumbnail", OffsetDateTime.now());
         final FindBlogPostResponse givenResponse = new FindBlogPostResponse(givenMeta, List.of(givenDocument));
         BDDMockito.given(mockFindBlogPostService.findBlog(refEq(givenRequest))).willReturn(givenResponse);
 
-        final GetBlogResponse response = getBlogService.getBlog(givenKeyword, null, null);
+        final GetBlogResponse response = getBlogService.getBlog(givenKeyword, givenPage, givenSize);
 
         assertThat(response.meta()).isNotNull();
         assertThat(response.meta().totalCount()).isEqualTo(givenResponse.meta().totalCount());
