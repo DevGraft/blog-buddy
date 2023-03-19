@@ -43,6 +43,10 @@ class SearchBlogApiTest {
     private GetBlogService mockGetBlogService;
     @Captor
     private ArgumentCaptor<String> keywordCaptor;
+    @Captor
+    private ArgumentCaptor<Integer> pageCaptor;
+    @Captor
+    private ArgumentCaptor<Integer> sizeCaptor;
     private final ObjectMapper objectMapper = new ObjectMapperConfig().objectMapper();
 
     @BeforeEach
@@ -63,14 +67,19 @@ class SearchBlogApiTest {
     @Test
     void getBlog_passesParamToService() throws Exception {
         final String givenKeyword = "Kakao Landing";
-
+        final Integer givenPage = 1;
+        final Integer givenSize = 10;
         mockMvc.perform(MockMvcRequestBuilders.get("/search/blog")
-                .param("keyword", givenKeyword));
+                .param("keyword", givenKeyword)
+                .param("page", givenPage.toString())
+                .param("size", givenSize.toString())
+        );
 
-        Mockito.verify(mockGetBlogService, Mockito.times(1)).getBlog(keywordCaptor.capture());
+        Mockito.verify(mockGetBlogService, Mockito.times(1)).getBlog(keywordCaptor.capture(), pageCaptor.capture(), sizeCaptor.capture());
         Assertions.assertThat(keywordCaptor.getValue()).isEqualTo(givenKeyword);
+        Assertions.assertThat(pageCaptor.getValue()).isEqualTo(givenPage);
+        Assertions.assertThat(sizeCaptor.getValue()).isEqualTo(givenSize);
     }
-
     @DisplayName("블로그 검색 결과는 반환됩니다.")
     @Test
     void getBlog_returnValue() throws Exception {
@@ -79,7 +88,7 @@ class SearchBlogApiTest {
         final GetBlogDocument givenDocument = new GetBlogDocument("kakao-title", "kakao landing content", "url",
                 "PCloud", "thumbnail", OffsetDateTime.now());
         final GetBlogResponse givenResponse = new GetBlogResponse(givenMeta, List.of(givenDocument));
-        BDDMockito.given(mockGetBlogService.getBlog(givenKeyword)).willReturn(givenResponse);
+        BDDMockito.given(mockGetBlogService.getBlog(givenKeyword, null, null)).willReturn(givenResponse);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/search/blog")
                         .param("keyword", givenKeyword))

@@ -13,7 +13,7 @@ import org.springframework.util.StringUtils;
 @Service
 public class GetBlogService {
     private final FindBlogPostService findBlogPostService;
-    public GetBlogResponse getBlog(String keyword) {
+    public GetBlogResponse getBlog(final String keyword, final Integer page, final Integer size) {
         /* keyword validation */
         if (!StringUtils.hasText(keyword)) {
             throw RequestException.of(HttpStatus.BAD_REQUEST, "keyword 입력은 공백일 수 없습니다.");

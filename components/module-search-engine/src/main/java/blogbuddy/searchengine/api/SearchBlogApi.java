@@ -17,7 +17,9 @@ public class SearchBlogApi {
     private final GetBlogService getBlogService;
 
     @GetMapping
-    public GetBlogResponse getBlog(@RequestParam(name = "keyword", required = false) String keyword) {
-        return getBlogService.getBlog(keyword);
+    public GetBlogResponse getBlog(@RequestParam(name = "keyword", required = false) String keyword,
+                                   @RequestParam(name = "page", required = false) Integer page,
+                                   @RequestParam(name = "size", required = false) Integer size) {
+        return getBlogService.getBlog(keyword, page, size);
     }
 }

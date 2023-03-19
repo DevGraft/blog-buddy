@@ -42,7 +42,7 @@ class GetBlogServiceTest {
     void searchPost_keywordValidationCheck() {
         final String givenKeyword = "";
 
-        final RequestException exception = assertThrows(RequestException.class, () -> getBlogService.getBlog(givenKeyword));
+        final RequestException exception = assertThrows(RequestException.class, () -> getBlogService.getBlog(givenKeyword, null, null));
 
         assertThat(exception).isNotNull();
         assertThat(exception.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -57,7 +57,7 @@ class GetBlogServiceTest {
         final FindBlogPostResponse givenResponse = new FindBlogPostResponse(givenMeta, List.of());
         BDDMockito.given(mockFindBlogPostService.findBlog(any())).willReturn(givenResponse);
 
-        getBlogService.getBlog(givenKeyword);
+        getBlogService.getBlog(givenKeyword, null, null);
 
         Mockito.verify(mockFindBlogPostService, Mockito.times(1))
                 .findBlog(blogPostFindRequestArgumentCaptor.capture());
@@ -74,7 +74,7 @@ class GetBlogServiceTest {
         final FindBlogPostResponse givenResponse = new FindBlogPostResponse(givenMeta, List.of(givenDocument));
         BDDMockito.given(mockFindBlogPostService.findBlog(refEq(givenRequest))).willReturn(givenResponse);
 
-        final GetBlogResponse response = getBlogService.getBlog(givenKeyword);
+        final GetBlogResponse response = getBlogService.getBlog(givenKeyword, null, null);
 
         assertThat(response.meta()).isNotNull();
         assertThat(response.meta().totalCount()).isEqualTo(givenResponse.meta().totalCount());
