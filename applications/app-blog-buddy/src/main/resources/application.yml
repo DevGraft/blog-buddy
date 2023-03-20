@@ -1,10 +1,13 @@
 spring:
   config:
     import:
-     - db.properties
+     - classpath:db.properties
   cloud:
     compatibility-verifier:
       enabled: false
+  profiles:
+    group:
+      default: h2
 client:
   kakao:
     url: https://dapi.kakao.com

@@ -1,12 +1,11 @@
 package blogbuddy.searchhistory.domain
 
-import lombok.Builder
 import java.time.LocalDateTime
 import javax.persistence.*
 
-@Table(name = "SearchKeywordHistory", indexes = [Index(name = "idx_keyword", columnList = "keyword")])
+@Table(name = "SearchKeywordHistory")
 @Entity
-class SearchKeywordHistory @Builder constructor(
+class SearchKeywordHistory constructor(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
