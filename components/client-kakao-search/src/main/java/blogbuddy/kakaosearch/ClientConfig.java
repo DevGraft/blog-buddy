@@ -14,18 +14,18 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ClientConfig {
     @Bean
-    public KakaoSearchClient kakaoSearchClient(
+    public KakaoClient kakaoSearchClient(
             @Autowired ObjectMapper objectMapper,
-            @Autowired KakaoInterceptor kakaoInterceptor,
-            @Autowired KakaoSearchErrorDecoder kakaoSearchErrorDecoder,
+            @Autowired KakaoClientInterceptor kakaoClientInterceptor,
+            @Autowired KakaoClientErrorDecoder kakaoClientErrorDecoder,
             @Value("${client.kakao.url}") String url) {
         return Feign.builder()
                 .client(new OkHttpClient())
-                .requestInterceptor(kakaoInterceptor)
+                .requestInterceptor(kakaoClientInterceptor)
                 .encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder(objectMapper))
-                .errorDecoder(kakaoSearchErrorDecoder)
+                .errorDecoder(kakaoClientErrorDecoder)
                 .contract(new SpringMvcContract())
-                .target(KakaoSearchClient.class, url);
+                .target(KakaoClient.class, url);
     }
 }

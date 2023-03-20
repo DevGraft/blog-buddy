@@ -12,7 +12,7 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @Component
-public class KakaoSearchErrorDecoder implements ErrorDecoder {
+public class KakaoClientErrorDecoder implements ErrorDecoder {
     private final ObjectMapper objectMapper;
 
     @Override
@@ -22,9 +22,9 @@ public class KakaoSearchErrorDecoder implements ErrorDecoder {
             final Map<String, String> data = objectMapper.readValue(bytes, Map.class);
             final String errorType = data.get("errorType");
             final String message = data.get("message");
-            return KakaoSearchException.mapped(response.status(), errorType, message);
+            return KakaoClientException.mapped(response.status(), errorType, message);
         } catch (IOException e) {
-            return KakaoSearchException.mapped(HttpStatus.INTERNAL_SERVER_ERROR.value(), "", e.getMessage());
+            return KakaoClientException.mapped(HttpStatus.INTERNAL_SERVER_ERROR.value(), "", e.getMessage());
         }
     }
 }
