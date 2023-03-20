@@ -24,8 +24,9 @@ subprojects {
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
-        implementation(project(':features:support-mapper'))
-
+        if (!project.name.contains("support-mapper")) {
+            implementation(project(':features:support-mapper'))
+        }
 
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
@@ -33,6 +34,11 @@ subprojects {
 
     test {
         useJUnitPlatform()
+    }
+
+    clean {
+        delete 'out'
+        delete 'src/main/generated'
     }
 }
 

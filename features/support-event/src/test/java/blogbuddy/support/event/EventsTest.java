@@ -8,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @SpringBootTest(classes = {Events.class, EventsTest.TestEventHandler.class})
 @DisplayName("이벤트 테스트")
 class EventsTest {
@@ -27,6 +29,10 @@ class EventsTest {
     }
 
     public static class TestEvent implements Event {
+        @Override
+        public LocalDateTime getRegisterDatetime() {
+            return null;
+        }
     }
 
     @Component

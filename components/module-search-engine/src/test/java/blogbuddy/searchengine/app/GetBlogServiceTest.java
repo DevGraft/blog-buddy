@@ -5,6 +5,7 @@ import blogbuddy.searchengine.domain.FindBlogPostMeta;
 import blogbuddy.searchengine.domain.FindBlogPostRequest;
 import blogbuddy.searchengine.domain.FindBlogPostResponse;
 import blogbuddy.searchengine.domain.FindBlogPostService;
+import blogbuddy.searchengine.domain.LocalDateTimeProvider;
 import blogbuddy.support.advice.exception.RequestException;
 import blogbuddy.support.event.Events;
 import blogbuddy.support.event.searchengine.GetBlogEvent;
@@ -21,6 +22,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -36,6 +38,8 @@ class GetBlogServiceTest {
     private GetBlogService getBlogService;
     @Mock
     private FindBlogPostService mockFindBlogPostService;
+    @Mock
+    private LocalDateTimeProvider mockLocalDateTimeProvider;
     @Mock
     private Events events;
     @Captor
@@ -107,11 +111,14 @@ class GetBlogServiceTest {
         final FindBlogPostResponse givenResponse = new FindBlogPostResponse(givenMeta, List.of(givenDocument));
         BDDMockito.given(mockFindBlogPostService.findBlog(any())).willReturn(givenResponse);
         final String givenKeyword = "kakaoLanding";
+        final LocalDateTime givenRegisterDatetime = LocalDateTime.now();
+        BDDMockito.given(mockLocalDateTimeProvider.now()).willReturn(givenRegisterDatetime);
 
         getBlogService.getBlog(givenKeyword, 1, 10, "accuracy");
 
         Mockito.verify(events, times(1)).raise(blogEventArgumentCaptor.capture());
         Assertions.assertThat(blogEventArgumentCaptor.getValue()).isNotNull();
         Assertions.assertThat(blogEventArgumentCaptor.getValue().getKeyword()).isEqualTo(givenKeyword);
+        Assertions.assertThat(blogEventArgumentCaptor.getValue().getRegisterDatetime()).isEqualTo(givenRegisterDatetime);
     }
 }
