@@ -9,5 +9,6 @@ include ':features:support-event-search-engine'
 include ':components:module-search-engine'
 include ':components:module-search-history'
 include ':components:client-kakao-search'
+include ':components:client-naver-search'
 /* apps */
 include ':applications:app-blog-buddy'
