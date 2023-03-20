@@ -5,7 +5,10 @@ import blogbuddy.searchengine.domain.FindBlogPostMeta;
 import blogbuddy.searchengine.domain.FindBlogPostRequest;
 import blogbuddy.searchengine.domain.FindBlogPostResponse;
 import blogbuddy.searchengine.domain.FindBlogPostService;
+import blogbuddy.searchengine.domain.LocalDateTimeProvider;
 import blogbuddy.support.advice.exception.RequestException;
+import blogbuddy.support.event.Events;
+import blogbuddy.support.event.searchengine.GetBlogEvent;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,12 +22,14 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("블로그 검색 Service")
@@ -33,8 +38,14 @@ class GetBlogServiceTest {
     private GetBlogService getBlogService;
     @Mock
     private FindBlogPostService mockFindBlogPostService;
+    @Mock
+    private LocalDateTimeProvider mockLocalDateTimeProvider;
+    @Mock
+    private Events events;
     @Captor
     private ArgumentCaptor<FindBlogPostRequest> blogPostFindRequestArgumentCaptor;
+    @Captor
+    private ArgumentCaptor<GetBlogEvent> blogEventArgumentCaptor;
 
     @DisplayName("요청 값 [keyword]가 비어있을 경우 예외처리가 발생해야합니다.")
     @Test
@@ -61,7 +72,7 @@ class GetBlogServiceTest {
 
         getBlogService.getBlog(givenKeyword, givenPage, givenSize, givenSort);
 
-        Mockito.verify(mockFindBlogPostService, Mockito.times(1))
+        Mockito.verify(mockFindBlogPostService, times(1))
                 .findBlog(blogPostFindRequestArgumentCaptor.capture());
         Assertions.assertThat(blogPostFindRequestArgumentCaptor.getValue().getQuery()).isEqualTo(givenKeyword);
         Assertions.assertThat(blogPostFindRequestArgumentCaptor.getValue().getPage()).isEqualTo(givenPage);
@@ -72,9 +83,6 @@ class GetBlogServiceTest {
     @DisplayName("블로그 글 검색의 결과는 반환됩니다.")
     @Test
     void searchPost_returnValue() {
-        final String givenKeyword = "kakaoLanding";
-        final Integer givenPage = 1;
-        final Integer givenSize = 10;
         final FindBlogPostMeta givenMeta = new FindBlogPostMeta(1, 1, true);
         final FindBlogPostDocument givenDocument = new FindBlogPostDocument("title", "contents-kakaoLanding", "url", "blogName","thumbnail", OffsetDateTime.now());
         final FindBlogPostResponse givenResponse = new FindBlogPostResponse(givenMeta, List.of(givenDocument));
@@ -93,5 +101,24 @@ class GetBlogServiceTest {
         assertThat(response.documents().get(0).blogName()).isEqualTo(givenDocument.blogName());
         assertThat(response.documents().get(0).thumbnail()).isEqualTo(givenDocument.thumbnail());
         assertThat(response.documents().get(0).datetime()).isEqualTo(givenDocument.datetime());
+    }
+
+    @DisplayName("블로그 검색 성공 시 이벤트가 발생합니다.")
+    @Test
+    void getBlog_publishGetBlogEvent() {
+        final FindBlogPostMeta givenMeta = new FindBlogPostMeta(1, 1, true);
+        final FindBlogPostDocument givenDocument = new FindBlogPostDocument("title", "contents-kakaoLanding", "url", "blogName","thumbnail", OffsetDateTime.now());
+        final FindBlogPostResponse givenResponse = new FindBlogPostResponse(givenMeta, List.of(givenDocument));
+        BDDMockito.given(mockFindBlogPostService.findBlog(any())).willReturn(givenResponse);
+        final String givenKeyword = "kakaoLanding";
+        final LocalDateTime givenRegisterDatetime = LocalDateTime.now();
+        BDDMockito.given(mockLocalDateTimeProvider.now()).willReturn(givenRegisterDatetime);
+
+        getBlogService.getBlog(givenKeyword, 1, 10, "accuracy");
+
+        Mockito.verify(events, times(1)).raise(blogEventArgumentCaptor.capture());
+        Assertions.assertThat(blogEventArgumentCaptor.getValue()).isNotNull();
+        Assertions.assertThat(blogEventArgumentCaptor.getValue().getKeyword()).isEqualTo(givenKeyword);
+        Assertions.assertThat(blogEventArgumentCaptor.getValue().getRegisterDatetime()).isEqualTo(givenRegisterDatetime);
     }
 }
