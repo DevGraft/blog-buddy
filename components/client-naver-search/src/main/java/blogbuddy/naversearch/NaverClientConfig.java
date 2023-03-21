@@ -1,8 +1,5 @@
-package blogbuddy.naversearch.config;
+package blogbuddy.naversearch;
 
-import blogbuddy.naversearch.NaverClient;
-import blogbuddy.naversearch.NaverClientErrorDecoder;
-import blogbuddy.naversearch.NaverClientInterceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Feign;
 import feign.jackson.JacksonDecoder;

@@ -1,7 +1,6 @@
 package blogbuddy.naversearch;
 
-import blogbuddy.naversearch.config.NaverClientConfig;
-import blogbuddy.naversearch.config.ObjectMapperConfig;
+import blogbuddy.mapper.ObjectMapperConfig;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

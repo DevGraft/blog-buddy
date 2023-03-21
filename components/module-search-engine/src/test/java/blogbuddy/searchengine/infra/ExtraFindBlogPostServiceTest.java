@@ -24,6 +24,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -139,14 +140,14 @@ class ExtraFindBlogPostServiceTest {
         assertThat(queryCaptor.getValue()).isEqualTo(givenQuery);
         assertThat(pageCaptor.getValue()).isEqualTo(givenPage);
         assertThat(sizeCaptor.getValue()).isEqualTo(givenSize);
-        assertThat(sortCaptor.getValue()).isEqualTo(givenSort);
+        assertThat(sortCaptor.getValue()).isEqualTo("date");
     }
 
     @DisplayName("Naver Api 호출 결과를 형식에 맞추어 반환합니다.")
     @Test
     void findBlog_returnNaverApiValue() throws KakaoClientException, NaverClientException {
         final FindBlogPostRequest givenRequest = FindBlogPostRequest.mapped("givenQuery", null, null, null);
-        final NaverSearchBlogItem givenItem = new NaverSearchBlogItem("title", "link", "desc", "bloggerName", "bloggerLink", "postDate");
+        final NaverSearchBlogItem givenItem = new NaverSearchBlogItem("title", "link", "desc", "bloggerName", "bloggerLink", LocalDate.now());
         final NaverSearchBlogResponse givenResponse = new NaverSearchBlogResponse(100, 1, 10, "", List.of(givenItem));
         BDDMockito.given(mockKakaoClient.searchBlog(any(), any(), any(), any()))
                 .willThrow(KakaoClientException.mapped(HttpStatus.INTERNAL_SERVER_ERROR.value(), "ErrorType", "호출 에러"));
