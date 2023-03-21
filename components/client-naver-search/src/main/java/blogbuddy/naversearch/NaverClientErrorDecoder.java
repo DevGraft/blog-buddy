@@ -1,4 +1,4 @@
-package blogbuddy.kakaosearch;
+package blogbuddy.naversearch;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Response;
@@ -12,7 +12,7 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @Component
-public class KakaoSearchErrorDecoder implements ErrorDecoder {
+public class NaverClientErrorDecoder implements ErrorDecoder {
     private final ObjectMapper objectMapper;
 
     @Override
@@ -20,11 +20,11 @@ public class KakaoSearchErrorDecoder implements ErrorDecoder {
         try {
             final byte[] bytes = response.body().asInputStream().readAllBytes();
             final Map<String, String> data = objectMapper.readValue(bytes, Map.class);
-            final String errorType = data.get("errorType");
-            final String message = data.get("message");
-            return KakaoSearchException.mapped(response.status(), errorType, message);
+            final String errorCode = data.get("errorCode");
+            final String errorMessage = data.get("errorMessage");
+            return NaverClientException.mapped(response.status(), errorCode, errorMessage);
         } catch (IOException e) {
-            return KakaoSearchException.mapped(HttpStatus.INTERNAL_SERVER_ERROR.value(), "", e.getMessage());
+            return NaverClientException.mapped(HttpStatus.INTERNAL_SERVER_ERROR.value(), "", e.getMessage());
         }
     }
 }

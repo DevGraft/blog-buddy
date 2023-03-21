@@ -1,4 +1,4 @@
-package blogbuddy.kakaosearch;
+package blogbuddy.naversearch;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Feign;
@@ -12,20 +12,20 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ClientConfig {
+public class NaverClientConfig {
     @Bean
-    public KakaoSearchClient kakaoSearchClient(
+    public NaverClient naverSearchClient(
             @Autowired ObjectMapper objectMapper,
-            @Autowired KakaoInterceptor kakaoInterceptor,
-            @Autowired KakaoSearchErrorDecoder kakaoSearchErrorDecoder,
-            @Value("${client.kakao.url}") String url) {
+            @Autowired NaverClientInterceptor naverClientInterceptor,
+            @Autowired NaverClientErrorDecoder naverClientErrorDecoder,
+            @Value("${client.naver.url}") String url) {
         return Feign.builder()
                 .client(new OkHttpClient())
-                .requestInterceptor(kakaoInterceptor)
+                .requestInterceptor(naverClientInterceptor)
                 .encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder(objectMapper))
-                .errorDecoder(kakaoSearchErrorDecoder)
+                .errorDecoder(naverClientErrorDecoder)
                 .contract(new SpringMvcContract())
-                .target(KakaoSearchClient.class, url);
+                .target(NaverClient.class, url);
     }
 }
