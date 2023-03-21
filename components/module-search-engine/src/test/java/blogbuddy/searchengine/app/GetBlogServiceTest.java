@@ -23,7 +23,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -84,7 +83,7 @@ class GetBlogServiceTest {
     @Test
     void searchPost_returnValue() {
         final FindBlogPostMeta givenMeta = new FindBlogPostMeta(1, 1, true);
-        final FindBlogPostDocument givenDocument = new FindBlogPostDocument("title", "contents-kakaoLanding", "url", "blogName","thumbnail", OffsetDateTime.now());
+        final FindBlogPostDocument givenDocument = new FindBlogPostDocument("title", "contents-kakaoLanding", "url", "blogName","thumbnail", LocalDateTime.now());
         final FindBlogPostResponse givenResponse = new FindBlogPostResponse(givenMeta, List.of(givenDocument));
         BDDMockito.given(mockFindBlogPostService.findBlog(any())).willReturn(givenResponse);
 
@@ -100,14 +99,14 @@ class GetBlogServiceTest {
         assertThat(response.documents().get(0).url()).isEqualTo(givenDocument.url());
         assertThat(response.documents().get(0).blogName()).isEqualTo(givenDocument.blogName());
         assertThat(response.documents().get(0).thumbnail()).isEqualTo(givenDocument.thumbnail());
-        assertThat(response.documents().get(0).datetime()).isEqualTo(givenDocument.datetime());
+        assertThat(response.documents().get(0).postDate()).isEqualTo(givenDocument.datetime().toLocalDate());
     }
 
     @DisplayName("블로그 검색 성공 시 이벤트가 발생합니다.")
     @Test
     void getBlog_publishGetBlogEvent() {
         final FindBlogPostMeta givenMeta = new FindBlogPostMeta(1, 1, true);
-        final FindBlogPostDocument givenDocument = new FindBlogPostDocument("title", "contents-kakaoLanding", "url", "blogName","thumbnail", OffsetDateTime.now());
+        final FindBlogPostDocument givenDocument = new FindBlogPostDocument("title", "contents-kakaoLanding", "url", "blogName","thumbnail", LocalDateTime.now());
         final FindBlogPostResponse givenResponse = new FindBlogPostResponse(givenMeta, List.of(givenDocument));
         BDDMockito.given(mockFindBlogPostService.findBlog(any())).willReturn(givenResponse);
         final String givenKeyword = "kakaoLanding";

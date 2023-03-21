@@ -116,7 +116,7 @@ class ExtraFindBlogPostServiceTest {
         assertThat(response.documents().get(0).blogName()).isEqualTo(givenResponse.getDocuments().get(0).getBlogName());
         assertThat(response.documents().get(0).url()).isEqualTo(givenResponse.getDocuments().get(0).getUrl());
         assertThat(response.documents().get(0).thumbnail()).isEqualTo(givenResponse.getDocuments().get(0).getThumbnail());
-        assertThat(response.documents().get(0).datetime()).isEqualTo(givenResponse.getDocuments().get(0).getDatetime());
+        assertThat(response.documents().get(0).datetime()).isEqualTo(givenResponse.getDocuments().get(0).getDatetime().toLocalDateTime());
     }
 
     @DisplayName("카카오 Api 호출에 문제가 생겼을 경우 Naver Api 호출합니다.")

@@ -5,12 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;
 import lombok.Builder;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDate;
 
 @Builder(access = AccessLevel.PRIVATE)
 public record GetBlogDocument(String title, String contents, String url,
                               @JsonProperty("blogname") String blogName, String thumbnail,
-                              OffsetDateTime datetime) {
+                              LocalDate postDate) {
     public static GetBlogDocument mapped(final FindBlogPostDocument item) {
         return builder()
                 .title(item.title())
@@ -18,7 +18,7 @@ public record GetBlogDocument(String title, String contents, String url,
                 .url(item.url())
                 .blogName(item.blogName())
                 .thumbnail(item.thumbnail())
-                .datetime(item.datetime())
+                .postDate(item.datetime().toLocalDate())
                 .build();
     }
 }

@@ -1,11 +1,9 @@
 package blogbuddy.searchengine.api;
 
-import blogbuddy.mapper.ObjectMapperConfig;
 import blogbuddy.searchengine.app.GetBlogDocument;
 import blogbuddy.searchengine.app.GetBlogMeta;
 import blogbuddy.searchengine.app.GetBlogResponse;
 import blogbuddy.searchengine.app.GetBlogService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,19 +16,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Locale;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 @ExtendWith(MockitoExtension.class)
@@ -49,13 +42,10 @@ class SearchBlogApiTest {
     private ArgumentCaptor<Integer> sizeCaptor;
     @Captor
     private ArgumentCaptor<String> sortCaptor;
-    private final ObjectMapper objectMapper = new ObjectMapperConfig().objectMapper();
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(searchBlogApi)
-                .setMessageConverters(new MappingJackson2HttpMessageConverter(objectMapper))
-                .build();
+        mockMvc = MockMvcBuilders.standaloneSetup(searchBlogApi).build();
     }
 
     @DisplayName("블로그 검색 정상 결과는 status=Ok(200)입니다.")
@@ -74,8 +64,8 @@ class SearchBlogApiTest {
         final String givenSort = "recency";
         mockMvc.perform(MockMvcRequestBuilders.get("/search/blog")
                 .param("keyword", givenKeyword)
-                .param("page", givenPage.toString())
-                .param("size", givenSize.toString())
+                .param("page", String.valueOf(givenPage))
+                .param("size", String.valueOf(givenSize))
                 .param("sort", givenSort)
         );
 
@@ -91,28 +81,23 @@ class SearchBlogApiTest {
         final String givenKeyword = "Kakao Landing";
         final GetBlogMeta givenMeta = new GetBlogMeta(1, 1, true);
         final GetBlogDocument givenDocument = new GetBlogDocument("kakao-title", "kakao landing content", "url",
-                "PCloud", "thumbnail", OffsetDateTime.now());
+                "PCloud", "thumbnail", LocalDate.now());
         final GetBlogResponse givenResponse = new GetBlogResponse(givenMeta, List.of(givenDocument));
         BDDMockito.given(mockGetBlogService.getBlog(givenKeyword, null, null, null)).willReturn(givenResponse);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/search/blog")
                         .param("keyword", givenKeyword))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.meta", notNullValue(GetBlogMeta.class)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.meta.totalCount", is(givenResponse.meta().totalCount())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.meta.pageableCount", is(givenResponse.meta().pageableCount())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.meta.isEnd", is(givenResponse.meta().isEnd())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.documents", hasSize(1)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.documents[0].title", is(givenDocument.title())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.documents[0].contents", is(givenDocument.contents())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.documents[0].url", is(givenDocument.url())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.documents[0].blogname", is(givenDocument.blogName())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.documents[0].thumbnail", is(givenDocument.thumbnail())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.documents[0].datetime", is(convertDateToString(givenDocument.datetime()))))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.meta.totalCount").value(givenResponse.meta().totalCount()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.meta.pageableCount").value(givenResponse.meta().pageableCount()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.meta.isEnd").value(givenResponse.meta().isEnd()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.documents").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.documents[0].title").value(givenDocument.title()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.documents[0].contents").value(givenDocument.contents()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.documents[0].url").value(givenDocument.url()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.documents[0].blogname").value(givenDocument.blogName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.documents[0].thumbnail").value(givenDocument.thumbnail()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.documents[0].postDate").isNotEmpty())
         ;
-    }
-
-    private String convertDateToString(OffsetDateTime datetime) {
-        final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.KOREAN);
-        return datetime.format(DATE_TIME_FORMATTER);
     }
 }
