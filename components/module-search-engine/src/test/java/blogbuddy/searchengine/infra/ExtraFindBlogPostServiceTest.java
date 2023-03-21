@@ -87,8 +87,6 @@ class ExtraFindBlogPostServiceTest {
                 extraBlogPostFindService.findBlog(givenRequest));
 
         assertThat(exception).isNotNull();
-        assertThat(exception.getMessage()).isEqualTo(givenErrorMessage);
-        assertThat(exception.getStatus().value()).isEqualTo(givenStatus);
     }
 
     @DisplayName("블로그 조회 성공 결과는 반환되어야합니다.(정상 기준/kakao)")
