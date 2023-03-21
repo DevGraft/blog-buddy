@@ -7,5 +7,5 @@ import lombok.Getter;
 @Getter
 public class MostSearchedBlogItem {
     private final String keyword;
-    private final int count;
+    private final Long count;
 }

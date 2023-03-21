@@ -42,7 +42,7 @@ class MostSearchedBlogsServiceTest {
     @DisplayName("QueryRepository에게 전달받은 값을 형식에 맞게 반환합니다.")
     @Test
     void getMostSearchBlogs_returnValue() {
-        final BlogSearchHistoryByCountDto givenDto = new BlogSearchHistoryByCountDto("PCloud의 블로그", 1000);
+        final BlogSearchHistoryByCountDto givenDto = new BlogSearchHistoryByCountDto("PCloud의 블로그", 1000L);
         BDDMockito.given(mockQueryRepository.getBlogSearchHistoryByCount(anyLong())).willReturn(List.of(givenDto));
 
         final MostSearchedBlogsResponse response = mostSearchedBlogsService.getMostSearchedBlogs();

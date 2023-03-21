@@ -46,7 +46,7 @@ class BlogSearchHistoryApiTest {
     @Test
     void getMostSearchedBlogs_returnValueByService() throws Exception {
         final String givenKeyword = "kakao landing";
-        final int givenCount = 100000;
+        final Long givenCount = 100000L;
         final MostSearchedBlogItem givenItem = new MostSearchedBlogItem(givenKeyword, givenCount);
         final MostSearchedBlogsResponse givenResponse = new MostSearchedBlogsResponse(List.of(givenItem));
         BDDMockito.given(mockMostSearchedBlogsService.getMostSearchedBlogs()).willReturn(givenResponse);
