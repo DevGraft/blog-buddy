@@ -58,7 +58,7 @@ public class ExtraFindBlogPostService implements FindBlogPostService {
         return switch (sort) {
             case "accuracy" -> "sim";
             case "recency" -> "date";
-            default -> sort;
+            default -> "";
         };
     }
 
