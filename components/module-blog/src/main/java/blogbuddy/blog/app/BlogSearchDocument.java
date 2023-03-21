@@ -8,10 +8,10 @@ import lombok.Builder;
 import java.time.LocalDate;
 
 @Builder(access = AccessLevel.PRIVATE)
-public record SearchBlogDocument(String title, String contents, String url,
+public record BlogSearchDocument(String title, String contents, String url,
                                  @JsonProperty("blogname") String blogName, String thumbnail,
                                  LocalDate postDate) {
-    public static SearchBlogDocument mapped(final FindBlogPostDocument item) {
+    public static BlogSearchDocument mapped(final FindBlogPostDocument item) {
         return builder()
                 .title(item.title())
                 .contents(item.contents())

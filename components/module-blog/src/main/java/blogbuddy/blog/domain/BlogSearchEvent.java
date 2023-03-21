@@ -8,11 +8,11 @@ import java.time.LocalDateTime;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class SearchBlogEvent implements BlogEvent {
+public class BlogSearchEvent implements BlogEvent {
     private final String keyword;
     private final LocalDateTime registerDatetime;
 
-    public static SearchBlogEvent create(final String keyword, final LocalDateTime registerDatetime) {
-        return new SearchBlogEvent(keyword, registerDatetime);
+    public static BlogSearchEvent create(final String keyword, final LocalDateTime registerDatetime) {
+        return new BlogSearchEvent(keyword, registerDatetime);
     }
 }

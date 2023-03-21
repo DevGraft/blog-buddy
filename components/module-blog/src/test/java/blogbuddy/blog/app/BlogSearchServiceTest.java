@@ -1,13 +1,13 @@
 package blogbuddy.blog.app;
 
 import blogbuddy.blog.domain.BlogEvents;
+import blogbuddy.blog.domain.BlogSearchEvent;
 import blogbuddy.blog.domain.FindBlogPostDocument;
 import blogbuddy.blog.domain.FindBlogPostMeta;
 import blogbuddy.blog.domain.FindBlogPostRequest;
 import blogbuddy.blog.domain.FindBlogPostResponse;
 import blogbuddy.blog.domain.FindBlogPostService;
 import blogbuddy.blog.domain.LocalDateTimeProvider;
-import blogbuddy.blog.domain.SearchBlogEvent;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,11 +29,11 @@ import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("블로그 검색 Service")
-class GetBlogServiceTest {
+class BlogSearchServiceTest {
     @InjectMocks
-    private SearchBlogService searchBlogService;
+    private BlogSearchService blogSearchService;
     @Mock
-    private SearchBlogParamValidator mockParamValidator;
+    private BlogSearchParamValidator mockParamValidator;
     @Mock
     private FindBlogPostService mockFindBlogPostService;
     @Mock
@@ -43,7 +43,7 @@ class GetBlogServiceTest {
     @Captor
     private ArgumentCaptor<FindBlogPostRequest> blogPostFindRequestArgumentCaptor;
     @Captor
-    private ArgumentCaptor<SearchBlogEvent> blogEventArgumentCaptor;
+    private ArgumentCaptor<BlogSearchEvent> blogEventArgumentCaptor;
 
     @DisplayName("요청 값이 정상적인지 확인을 위해 Validator에게 검사를 요청합니다.")
     @Test
@@ -52,7 +52,7 @@ class GetBlogServiceTest {
         final Integer givenPage = 1;
         final Integer givenSize = 50;
         try {
-            searchBlogService.searchBlog(givenKeyword, givenPage, givenSize, null);
+            blogSearchService.searchBlog(givenKeyword, givenPage, givenSize, null);
         } catch (Throwable ignore) {}
 
         final ArgumentCaptor<String> keywordCaptor = ArgumentCaptor.forClass(String.class);
@@ -79,7 +79,7 @@ class GetBlogServiceTest {
         final FindBlogPostResponse givenResponse = new FindBlogPostResponse(givenMeta, List.of());
         BDDMockito.given(mockFindBlogPostService.findBlog(any())).willReturn(givenResponse);
 
-        searchBlogService.searchBlog(givenKeyword, givenPage, givenSize, givenSort);
+        blogSearchService.searchBlog(givenKeyword, givenPage, givenSize, givenSort);
 
         Mockito.verify(mockFindBlogPostService, times(1))
                 .findBlog(blogPostFindRequestArgumentCaptor.capture());
@@ -97,7 +97,7 @@ class GetBlogServiceTest {
         final FindBlogPostResponse givenResponse = new FindBlogPostResponse(givenMeta, List.of(givenDocument));
         BDDMockito.given(mockFindBlogPostService.findBlog(any())).willReturn(givenResponse);
 
-        final SearchBlogResponse response = searchBlogService.searchBlog("kakaoLanding", 1, 10, "accuracy");
+        final BlogSearchResponse response = blogSearchService.searchBlog("kakaoLanding", 1, 10, "accuracy");
 
         assertThat(response.meta()).isNotNull();
         assertThat(response.meta().totalCount()).isEqualTo(givenResponse.meta().totalCount());
@@ -114,7 +114,7 @@ class GetBlogServiceTest {
 
     @DisplayName("블로그 검색 성공 시 이벤트가 발생합니다.")
     @Test
-    void getBlog_publishGetBlogEvent() {
+    void searchBlog_publishGetBlogEvent() {
         final FindBlogPostMeta givenMeta = new FindBlogPostMeta(1, 1, true);
         final FindBlogPostDocument givenDocument = new FindBlogPostDocument("title", "contents-kakaoLanding", "url", "blogName","thumbnail", LocalDateTime.now());
         final FindBlogPostResponse givenResponse = new FindBlogPostResponse(givenMeta, List.of(givenDocument));
@@ -123,7 +123,7 @@ class GetBlogServiceTest {
         final LocalDateTime givenRegisterDatetime = LocalDateTime.now();
         BDDMockito.given(mockLocalDateTimeProvider.now()).willReturn(givenRegisterDatetime);
 
-        searchBlogService.searchBlog(givenKeyword, 1, 10, "accuracy");
+        blogSearchService.searchBlog(givenKeyword, 1, 10, "accuracy");
 
         Mockito.verify(events, times(1)).raise(blogEventArgumentCaptor.capture());
         Assertions.assertThat(blogEventArgumentCaptor.getValue()).isNotNull();

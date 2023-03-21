@@ -10,12 +10,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("블로그 검색 요청 검사기 테스트")
-class GetBlogParamValidatorTest {
+class BlogSearchParamValidatorTest {
 
-    private SearchBlogParamValidator validator;
+    private BlogSearchParamValidator validator;
     @BeforeEach
     void setUp() {
-        validator = new SearchBlogParamValidator();
+        validator = new BlogSearchParamValidator();
     }
 
     @DisplayName("keyword 입력은 필수이며 조건이 충족하지 않는다면 예외처리가 발생합니다.")

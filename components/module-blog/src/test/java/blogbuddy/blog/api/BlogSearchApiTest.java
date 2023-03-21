@@ -1,9 +1,9 @@
 package blogbuddy.blog.api;
 
-import blogbuddy.blog.app.SearchBlogDocument;
-import blogbuddy.blog.app.SearchBlogMeta;
-import blogbuddy.blog.app.SearchBlogResponse;
-import blogbuddy.blog.app.SearchBlogService;
+import blogbuddy.blog.app.BlogSearchDocument;
+import blogbuddy.blog.app.BlogSearchMeta;
+import blogbuddy.blog.app.BlogSearchResponse;
+import blogbuddy.blog.app.BlogSearchService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,12 +28,12 @@ import static org.hamcrest.Matchers.notNullValue;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("블로그 검색 API")
-class BlogApiTest {
+class BlogSearchApiTest {
     private MockMvc mockMvc;
     @InjectMocks
-    private BlogApi blogApi;
+    private BlogSearchApi blogSearchApi;
     @Mock
-    private SearchBlogService mockSearchBlogService;
+    private BlogSearchService mockBlogSearchService;
     @Captor
     private ArgumentCaptor<String> keywordCaptor;
     @Captor
@@ -45,19 +45,19 @@ class BlogApiTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(blogApi).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(blogSearchApi).build();
     }
 
     @DisplayName("블로그 검색 정상 결과는 status=Ok(200)입니다.")
     @Test
-    void getBlog_returnOkHttpStatus() throws Exception {
+    void searchBlog_returnOkHttpStatus() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/search/blog"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @DisplayName("전달받은 Param을 서비스에 전달합니다.")
     @Test
-    void getBlog_passesParamToService() throws Exception {
+    void searchBlog_passesParamToService() throws Exception {
         final String givenKeyword = "Kakao Landing";
         final Integer givenPage = 1;
         final Integer givenSize = 10;
@@ -69,7 +69,7 @@ class BlogApiTest {
                 .param("sort", givenSort)
         );
 
-        Mockito.verify(mockSearchBlogService, Mockito.times(1)).searchBlog(keywordCaptor.capture(), pageCaptor.capture(), sizeCaptor.capture(), sortCaptor.capture());
+        Mockito.verify(mockBlogSearchService, Mockito.times(1)).searchBlog(keywordCaptor.capture(), pageCaptor.capture(), sizeCaptor.capture(), sortCaptor.capture());
         Assertions.assertThat(keywordCaptor.getValue()).isEqualTo(givenKeyword);
         Assertions.assertThat(pageCaptor.getValue()).isEqualTo(givenPage);
         Assertions.assertThat(sizeCaptor.getValue()).isEqualTo(givenSize);
@@ -77,17 +77,17 @@ class BlogApiTest {
     }
     @DisplayName("블로그 검색 결과는 반환됩니다.")
     @Test
-    void getBlog_returnValue() throws Exception {
+    void searchBlog_returnValue() throws Exception {
         final String givenKeyword = "Kakao Landing";
-        final SearchBlogMeta givenMeta = new SearchBlogMeta(1, 1, true);
-        final SearchBlogDocument givenDocument = new SearchBlogDocument("kakao-title", "kakao landing content", "url",
+        final BlogSearchMeta givenMeta = new BlogSearchMeta(1, 1, true);
+        final BlogSearchDocument givenDocument = new BlogSearchDocument("kakao-title", "kakao landing content", "url",
                 "PCloud", "thumbnail", LocalDate.now());
-        final SearchBlogResponse givenResponse = new SearchBlogResponse(givenMeta, List.of(givenDocument));
-        BDDMockito.given(mockSearchBlogService.searchBlog(givenKeyword, null, null, null)).willReturn(givenResponse);
+        final BlogSearchResponse givenResponse = new BlogSearchResponse(givenMeta, List.of(givenDocument));
+        BDDMockito.given(mockBlogSearchService.searchBlog(givenKeyword, null, null, null)).willReturn(givenResponse);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/search/blog")
                         .param("keyword", givenKeyword))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.meta", notNullValue(SearchBlogMeta.class)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.meta", notNullValue(BlogSearchMeta.class)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.meta.totalCount").value(givenResponse.meta().totalCount()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.meta.pageableCount").value(givenResponse.meta().pageableCount()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.meta.isEnd").value(givenResponse.meta().isEnd()))

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 @Component
-public class SearchBlogParamValidator {
+public class BlogSearchParamValidator {
     private static final int MIN_VALUE = 1;
     private static final int MAX_VALUE = 50;
     public void validate(final String keyword, final Integer page, final Integer size) {
