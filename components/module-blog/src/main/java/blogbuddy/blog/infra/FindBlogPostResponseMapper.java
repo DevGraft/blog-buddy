@@ -12,7 +12,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class FindBlogPostResponseMapper {
+class FindBlogPostResponseMapper {
     public static FindBlogPostResponse mapped(final KakaoSearchBlogResponse response) {
         final FindBlogPostMeta meta = new FindBlogPostMeta(
                 response.getMeta().getTotalCount(),

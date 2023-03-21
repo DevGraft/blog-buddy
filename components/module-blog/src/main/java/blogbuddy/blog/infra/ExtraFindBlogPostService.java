@@ -24,7 +24,7 @@ import static blogbuddy.blog.domain.ExceptionConstant.SYSTEM_ERROR;
 
 @RequiredArgsConstructor
 @Component
-public class ExtraFindBlogPostService implements FindBlogPostService {
+class ExtraFindBlogPostService implements FindBlogPostService {
     private final KakaoClient kakaoClient;
     private final NaverClient naverClient;
 

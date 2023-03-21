@@ -13,7 +13,7 @@ import static blogbuddy.blog.domain.QBlogSearchHistory.blogSearchHistory;
 
 @RequiredArgsConstructor
 @Repository
-public class BlogSearchHistoryQueryDslRepository implements BlogSearchHistoryQueryRepository {
+class BlogSearchHistoryQueryDslRepository implements BlogSearchHistoryQueryRepository {
     private final JPAQueryFactory queryFactory;
     @Override
     public List<BlogSearchHistoryByCountDto> getBlogSearchHistoryByCount(final long limit) {
