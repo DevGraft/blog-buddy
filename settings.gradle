@@ -6,6 +6,7 @@ include ':features:support-mapper'
 include ':features:support-event'
 include ':features:support-event-search-engine'
 /* components */
+include ':components:module-blog'
 include ':components:module-search-engine'
 include ':components:module-search-history'
 include ':components:client-kakao-search'
