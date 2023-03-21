@@ -24,7 +24,7 @@ subprojects {
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
-        if (!project.name.contains("support-mapper") && !project.name.contains("client-naver-search")) {
+        if (!project.name.contains("support-mapper")) {
             implementation(project(':features:support-mapper'))
         }
 

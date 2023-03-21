@@ -10,10 +10,13 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+
+import static java.time.format.DateTimeFormatter.BASIC_ISO_DATE;
 
 @Component
 public class JsonMapperJava8DateTimeModule extends SimpleModule {
@@ -23,11 +26,20 @@ public class JsonMapperJava8DateTimeModule extends SimpleModule {
     private static final DateTimeFormatter OFFSET_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(OFFSET_DATE_TIME_FORMAT, Locale.KOREAN);
     public JsonMapperJava8DateTimeModule() {
         /*LocalDateTime Format*/
+        this.addDeserializer(LocalDate.class, new LocalDateJsonDeserializer());
+        /*LocalDateTime Format*/
         this.addSerializer(LocalDateTime.class, new LocalDateTimeJsonSerializer());
         this.addDeserializer(LocalDateTime.class, new LocalDateTimeJsonDeserializer());
         /*OffsetDateTime Format*/
         this.addSerializer(OffsetDateTime.class, new OffsetDateTimeJsonSerializer());
         this.addDeserializer(OffsetDateTime.class, new OffsetDateJsonDeserializer());
+    }
+
+    private static class LocalDateJsonDeserializer extends JsonDeserializer<LocalDate> {
+        @Override
+        public LocalDate deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+            return LocalDate.parse(p.getValueAsString(), BASIC_ISO_DATE);
+        }
     }
     private static class LocalDateTimeJsonSerializer extends JsonSerializer<LocalDateTime> {
         @Override
@@ -41,6 +53,7 @@ public class JsonMapperJava8DateTimeModule extends SimpleModule {
             return LocalDateTime.parse(p.getValueAsString(), DATE_TIME_FORMATTER);
         }
     }
+
     private static class OffsetDateTimeJsonSerializer extends JsonSerializer<OffsetDateTime> {
         @Override
         public void serialize(OffsetDateTime value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
