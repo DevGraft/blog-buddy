@@ -7,10 +7,13 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * 카카오 블로그 검색 API 결과를 담는 클래스.
+ */
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class SearchBlogResponse {
-    private SearchBlogMeta meta;
-    private List<SearchBlogDocument> documents;
+public class KakaoSearchBlogResponse {
+    private KakaoSearchBlogMeta meta;
+    private List<KakaoSearchBlogDocument> documents;
 }
