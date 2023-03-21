@@ -12,7 +12,7 @@ import java.util.List;
 public class MostSearchedBlogsService {
     private final BlogSearchHistoryQueryRepository queryRepository;
     public MostSearchedBlogsResponse getMostSearchedBlogs() {
-        final List<BlogSearchHistoryByCountDto> dtoList = queryRepository.getBlogSearchHistoryByCount(10);
+        final List<BlogSearchHistoryByCountDto> dtoList = queryRepository.getBlogSearchHistoryByCount(10L);
         return MostSearchedBlogsResponse.mapped(dtoList);
     }
 }

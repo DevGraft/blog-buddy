@@ -16,7 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("인기 블로그 검색 Service")
@@ -26,7 +26,7 @@ class MostSearchedBlogsServiceTest {
     @Mock
     private BlogSearchHistoryQueryRepository mockQueryRepository;
     @Captor
-    private ArgumentCaptor<Integer> limitCaptor;
+    private ArgumentCaptor<Long> limitCaptor;
 
     @DisplayName("검색 기록 중 가장 많은 건을 찾도록 queryRepository에게 요청합니다.")
     @Test
@@ -43,7 +43,7 @@ class MostSearchedBlogsServiceTest {
     @Test
     void getMostSearchBlogs_returnValue() {
         final BlogSearchHistoryByCountDto givenDto = new BlogSearchHistoryByCountDto("PCloud의 블로그", 1000);
-        BDDMockito.given(mockQueryRepository.getBlogSearchHistoryByCount(anyInt())).willReturn(List.of(givenDto));
+        BDDMockito.given(mockQueryRepository.getBlogSearchHistoryByCount(anyLong())).willReturn(List.of(givenDto));
 
         final MostSearchedBlogsResponse response = mostSearchedBlogsService.getMostSearchedBlogs();
 
