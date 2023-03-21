@@ -1,5 +1,6 @@
 package blogbuddy.searchengine.app;
 
+import blogbuddy.searchengine.domain.ExceptionConstant;
 import blogbuddy.searchengine.domain.FindBlogPostDocument;
 import blogbuddy.searchengine.domain.FindBlogPostMeta;
 import blogbuddy.searchengine.domain.FindBlogPostRequest;
@@ -20,7 +21,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -54,8 +54,8 @@ class GetBlogServiceTest {
         final RequestException exception = assertThrows(RequestException.class, () -> getBlogService.getBlog(givenKeyword, null, null, null));
 
         assertThat(exception).isNotNull();
-        assertThat(exception.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(exception.getMessage()).isEqualTo("keyword 입력은 공백일 수 없습니다.");
+        assertThat(exception.getStatus()).isEqualTo(ExceptionConstant.SEARCH_BLOG_PARAM_KEYWORD_REQUIRED.getStatus());
+        assertThat(exception.getMessage()).isEqualTo(ExceptionConstant.SEARCH_BLOG_PARAM_KEYWORD_REQUIRED.getMessage());
     }
 
     @DisplayName("블로그 글 검색 정보 조회를 요청합니다.")
