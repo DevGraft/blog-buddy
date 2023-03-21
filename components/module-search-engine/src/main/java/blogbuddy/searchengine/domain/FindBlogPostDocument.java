@@ -1,8 +1,8 @@
 package blogbuddy.searchengine.domain;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
 public record FindBlogPostDocument(String title, String contents, String url, String blogName, String thumbnail,
-                                   OffsetDateTime datetime) {
+                                   LocalDateTime datetime) {
 
 }

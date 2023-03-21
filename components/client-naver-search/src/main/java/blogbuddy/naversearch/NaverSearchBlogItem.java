@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 /**
  * 네이버 블로그 검색 API 검색 결과 클래스
  */
@@ -38,5 +40,5 @@ public class NaverSearchBlogItem {
     /**
      * 포스트 작성 날짜
      */
-    private String postdate;
+    private LocalDate postdate;
 }

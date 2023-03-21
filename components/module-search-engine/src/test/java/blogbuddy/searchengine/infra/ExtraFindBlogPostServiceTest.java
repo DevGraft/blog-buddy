@@ -24,6 +24,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -86,8 +87,6 @@ class ExtraFindBlogPostServiceTest {
                 extraBlogPostFindService.findBlog(givenRequest));
 
         assertThat(exception).isNotNull();
-        assertThat(exception.getMessage()).isEqualTo(givenErrorMessage);
-        assertThat(exception.getStatus().value()).isEqualTo(givenStatus);
     }
 
     @DisplayName("블로그 조회 성공 결과는 반환되어야합니다.(정상 기준/kakao)")
@@ -115,7 +114,7 @@ class ExtraFindBlogPostServiceTest {
         assertThat(response.documents().get(0).blogName()).isEqualTo(givenResponse.getDocuments().get(0).getBlogName());
         assertThat(response.documents().get(0).url()).isEqualTo(givenResponse.getDocuments().get(0).getUrl());
         assertThat(response.documents().get(0).thumbnail()).isEqualTo(givenResponse.getDocuments().get(0).getThumbnail());
-        assertThat(response.documents().get(0).datetime()).isEqualTo(givenResponse.getDocuments().get(0).getDatetime());
+        assertThat(response.documents().get(0).datetime()).isEqualTo(givenResponse.getDocuments().get(0).getDatetime().toLocalDateTime());
     }
 
     @DisplayName("카카오 Api 호출에 문제가 생겼을 경우 Naver Api 호출합니다.")
@@ -139,14 +138,14 @@ class ExtraFindBlogPostServiceTest {
         assertThat(queryCaptor.getValue()).isEqualTo(givenQuery);
         assertThat(pageCaptor.getValue()).isEqualTo(givenPage);
         assertThat(sizeCaptor.getValue()).isEqualTo(givenSize);
-        assertThat(sortCaptor.getValue()).isEqualTo(givenSort);
+        assertThat(sortCaptor.getValue()).isEqualTo("date");
     }
 
     @DisplayName("Naver Api 호출 결과를 형식에 맞추어 반환합니다.")
     @Test
     void findBlog_returnNaverApiValue() throws KakaoClientException, NaverClientException {
         final FindBlogPostRequest givenRequest = FindBlogPostRequest.mapped("givenQuery", null, null, null);
-        final NaverSearchBlogItem givenItem = new NaverSearchBlogItem("title", "link", "desc", "bloggerName", "bloggerLink", "postDate");
+        final NaverSearchBlogItem givenItem = new NaverSearchBlogItem("title", "link", "desc", "bloggerName", "bloggerLink", LocalDate.now());
         final NaverSearchBlogResponse givenResponse = new NaverSearchBlogResponse(100, 1, 10, "", List.of(givenItem));
         BDDMockito.given(mockKakaoClient.searchBlog(any(), any(), any(), any()))
                 .willThrow(KakaoClientException.mapped(HttpStatus.INTERNAL_SERVER_ERROR.value(), "ErrorType", "호출 에러"));

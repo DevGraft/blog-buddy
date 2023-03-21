@@ -6,7 +6,6 @@ import blogbuddy.searchengine.domain.FindBlogPostRequest;
 import blogbuddy.searchengine.domain.FindBlogPostResponse;
 import blogbuddy.searchengine.domain.FindBlogPostService;
 import blogbuddy.searchengine.domain.LocalDateTimeProvider;
-import blogbuddy.support.advice.exception.RequestException;
 import blogbuddy.support.event.Events;
 import blogbuddy.support.event.searchengine.GetBlogEvent;
 import org.assertj.core.api.Assertions;
@@ -20,14 +19,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 
@@ -36,6 +32,8 @@ import static org.mockito.Mockito.times;
 class GetBlogServiceTest {
     @InjectMocks
     private GetBlogService getBlogService;
+    @Mock
+    private GetBlogParamValidator mockParamValidator;
     @Mock
     private FindBlogPostService mockFindBlogPostService;
     @Mock
@@ -47,16 +45,27 @@ class GetBlogServiceTest {
     @Captor
     private ArgumentCaptor<GetBlogEvent> blogEventArgumentCaptor;
 
-    @DisplayName("요청 값 [keyword]가 비어있을 경우 예외처리가 발생해야합니다.")
+    @DisplayName("요청 값이 정상적인지 확인을 위해 Validator에게 검사를 요청합니다.")
     @Test
-    void searchPost_keywordValidationCheck() {
+    void searchPost_passesParamToValidator() {
         final String givenKeyword = "";
+        final Integer givenPage = 1;
+        final Integer givenSize = 50;
+        try {
+            getBlogService.getBlog(givenKeyword, givenPage, givenSize, null);
+        } catch (Throwable ignore) {}
 
-        final RequestException exception = assertThrows(RequestException.class, () -> getBlogService.getBlog(givenKeyword, null, null, null));
+        final ArgumentCaptor<String> keywordCaptor = ArgumentCaptor.forClass(String.class);
+        final ArgumentCaptor<Integer> pageCaptor = ArgumentCaptor.forClass(Integer.class);
+        final ArgumentCaptor<Integer> sizeCaptor = ArgumentCaptor.forClass(Integer.class);
 
-        assertThat(exception).isNotNull();
-        assertThat(exception.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(exception.getMessage()).isEqualTo("keyword 입력은 공백일 수 없습니다.");
+        Mockito.verify(mockParamValidator, Mockito.times(1)).validate(keywordCaptor.capture(), pageCaptor.capture(), sizeCaptor.capture());
+        assertThat(keywordCaptor.getValue()).isNotNull();
+        assertThat(keywordCaptor.getValue()).isEqualTo(givenKeyword);
+        assertThat(pageCaptor.getValue()).isNotNull();
+        assertThat(pageCaptor.getValue()).isEqualTo(givenPage);
+        assertThat(sizeCaptor.getValue()).isNotNull();
+        assertThat(sizeCaptor.getValue()).isEqualTo(givenSize);
     }
 
     @DisplayName("블로그 글 검색 정보 조회를 요청합니다.")
@@ -84,7 +93,7 @@ class GetBlogServiceTest {
     @Test
     void searchPost_returnValue() {
         final FindBlogPostMeta givenMeta = new FindBlogPostMeta(1, 1, true);
-        final FindBlogPostDocument givenDocument = new FindBlogPostDocument("title", "contents-kakaoLanding", "url", "blogName","thumbnail", OffsetDateTime.now());
+        final FindBlogPostDocument givenDocument = new FindBlogPostDocument("title", "contents-kakaoLanding", "url", "blogName","thumbnail", LocalDateTime.now());
         final FindBlogPostResponse givenResponse = new FindBlogPostResponse(givenMeta, List.of(givenDocument));
         BDDMockito.given(mockFindBlogPostService.findBlog(any())).willReturn(givenResponse);
 
@@ -100,14 +109,14 @@ class GetBlogServiceTest {
         assertThat(response.documents().get(0).url()).isEqualTo(givenDocument.url());
         assertThat(response.documents().get(0).blogName()).isEqualTo(givenDocument.blogName());
         assertThat(response.documents().get(0).thumbnail()).isEqualTo(givenDocument.thumbnail());
-        assertThat(response.documents().get(0).datetime()).isEqualTo(givenDocument.datetime());
+        assertThat(response.documents().get(0).postDate()).isEqualTo(givenDocument.datetime().toLocalDate());
     }
 
     @DisplayName("블로그 검색 성공 시 이벤트가 발생합니다.")
     @Test
     void getBlog_publishGetBlogEvent() {
         final FindBlogPostMeta givenMeta = new FindBlogPostMeta(1, 1, true);
-        final FindBlogPostDocument givenDocument = new FindBlogPostDocument("title", "contents-kakaoLanding", "url", "blogName","thumbnail", OffsetDateTime.now());
+        final FindBlogPostDocument givenDocument = new FindBlogPostDocument("title", "contents-kakaoLanding", "url", "blogName","thumbnail", LocalDateTime.now());
         final FindBlogPostResponse givenResponse = new FindBlogPostResponse(givenMeta, List.of(givenDocument));
         BDDMockito.given(mockFindBlogPostService.findBlog(any())).willReturn(givenResponse);
         final String givenKeyword = "kakaoLanding";
