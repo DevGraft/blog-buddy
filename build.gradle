@@ -28,10 +28,6 @@ subprojects {
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
-        if (!project.name.contains("support-mapper") && !project.name.contains("blog")) {
-            implementation(project(':features:support-mapper'))
-        }
-
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
     }

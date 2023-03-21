@@ -9,12 +9,14 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.springframework.boot.jackson.JsonComponentModule;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
 import java.time.LocalDate;
 
 import static java.time.format.DateTimeFormatter.BASIC_ISO_DATE;
 
+@Configuration
 class NaverObjectMapperConfig {
     @Bean(name = "naverObjectMapper")
     public ObjectMapper objectMapper() {

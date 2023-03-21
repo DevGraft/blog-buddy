@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 class BlogObjectMapperConfig {
-    @Bean(name = "blogObjectMapper")
+    @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper()
                 .registerModule(new JsonDateTimeModule())

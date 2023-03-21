@@ -5,6 +5,7 @@ apply plugin: "com.ewerk.gradle.plugins.querydsl"
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'com.querydsl:querydsl-jpa'
     implementation 'com.querydsl:querydsl-apt'
