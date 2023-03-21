@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ClientConfig {
+public class KakaoClientConfig {
     @Bean
     public KakaoClient kakaoSearchClient(
             @Autowired ObjectMapper objectMapper,

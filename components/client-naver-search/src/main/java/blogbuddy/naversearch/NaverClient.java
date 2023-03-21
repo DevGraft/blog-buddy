@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface NaverClient {
 
     @GetMapping("/v1/search/blog")
-    SearchBlogResponse searchBlog(
+    NaverSearchBlogResponse searchBlog(
             @RequestParam(name = "query") String query,
             @RequestParam(name = "display", required = false) Integer display,
             @RequestParam(name = "start", required = false) Integer start,
