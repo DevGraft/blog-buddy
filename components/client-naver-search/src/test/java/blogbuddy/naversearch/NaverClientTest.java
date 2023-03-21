@@ -1,6 +1,7 @@
 package blogbuddy.naversearch;
 
-import blogbuddy.mapper.ObjectMapperConfig;
+import blogbuddy.naversearch.config.NaverClientConfig;
+import blogbuddy.naversearch.config.ObjectMapperConfig;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,8 +25,19 @@ class NaverClientTest {
     @DisplayName("클라이언트 API 요청 테스트")
     @Test
     void client_successAPIRequest() throws NaverClientException {
-        final NaverSearchBlogResponse pc = naverClient.searchBlog("PC", null, null, null);
+        final NaverSearchBlogResponse pc = naverClient.searchBlog("PC", 1, 10, null);
         Assertions.assertThat(pc).isNotNull();
+        Assertions.assertThat(pc.getTotal()).isNotNull();
+        Assertions.assertThat(pc.getStart()).isNotNull();
+        Assertions.assertThat(pc.getDisplay()).isNotNull();
+        Assertions.assertThat(pc.getLastBuildDate()).isNotNull();
+        Assertions.assertThat(pc.getItems()).isNotEmpty();
+        Assertions.assertThat(pc.getItems().get(0).getTitle()).isNotNull();
+        Assertions.assertThat(pc.getItems().get(0).getLink()).isNotNull();
+        Assertions.assertThat(pc.getItems().get(0).getDescription()).isNotNull();
+        Assertions.assertThat(pc.getItems().get(0).getBloggerName()).isNotNull();
+        Assertions.assertThat(pc.getItems().get(0).getBloggerLink()).isNotNull();
+        Assertions.assertThat(pc.getItems().get(0).getPostdate()).isNotNull();
     }
 
     @DisplayName("부적절한 요청 시 클라이언트는 에러를 발생시킵니다.")
