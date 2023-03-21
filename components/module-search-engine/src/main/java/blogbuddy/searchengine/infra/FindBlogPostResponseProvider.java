@@ -8,6 +8,7 @@ import blogbuddy.searchengine.domain.FindBlogPostResponse;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -19,7 +20,7 @@ public class FindBlogPostResponseProvider {
                 response.getMeta().isEnd());
 
         final List<FindBlogPostDocument> documents = response.getDocuments().stream()
-                .map(doc -> new FindBlogPostDocument(doc.getTitle(), doc.getContents(), doc.getUrl(), doc.getBlogName(), doc.getThumbnail(), doc.getDatetime()))
+                .map(doc -> new FindBlogPostDocument(doc.getTitle(), doc.getContents(), doc.getUrl(), doc.getBlogName(), doc.getThumbnail(), doc.getDatetime().toLocalDateTime()))
                 .toList();
 
         return new FindBlogPostResponse(meta, documents);
@@ -38,7 +39,7 @@ public class FindBlogPostResponseProvider {
         );
 
         final List<FindBlogPostDocument> documents = response.getItems().stream()
-                .map(item -> new FindBlogPostDocument(item.getTitle(), item.getDescription(), item.getLink(), item.getBloggerName(), null, null))
+                .map(item -> new FindBlogPostDocument(item.getTitle(), item.getDescription(), item.getLink(), item.getBloggerName(), null, item.getPostdate().atTime(LocalTime.MIN)))
                 .toList();
 
         return new FindBlogPostResponse(meta, documents);
