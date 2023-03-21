@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @Slf4j
 @RestControllerAdvice
-public class ExceptionAdvice {
+class ExceptionAdvice {
 
     @ExceptionHandler(RequestException.class)
     public Object handleRequestException(final RequestException e) {

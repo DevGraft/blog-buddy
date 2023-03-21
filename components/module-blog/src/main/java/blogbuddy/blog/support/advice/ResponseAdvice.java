@@ -22,7 +22,7 @@ import java.util.List;
 
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @RestControllerAdvice
-public class ResponseAdvice implements ResponseBodyAdvice<Object> {
+class ResponseAdvice implements ResponseBodyAdvice<Object> {
     private final List<PathPattern> ignores;
 
     public ResponseAdvice(@Value("${spring.advice.ignore-url-pattern-list:/v*/api-docs,/docs/**,/swagger-resources/**,/swagger-ui.html,/webjars/**,/swagger/**}")

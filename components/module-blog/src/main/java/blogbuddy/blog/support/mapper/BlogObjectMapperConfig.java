@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class BlogObjectMapperConfig {
+class BlogObjectMapperConfig {
     @Bean(name = "blogObjectMapper")
     public ObjectMapper objectMapper() {
         return new ObjectMapper()

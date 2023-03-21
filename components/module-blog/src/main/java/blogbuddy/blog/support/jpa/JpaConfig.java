@@ -10,7 +10,7 @@ import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 
 @Configuration
-public class JpaConfig {
+class JpaConfig {
     @Bean
     JPAQueryFactory jpaQueryFactory(EntityManager em) {
         return new JPAQueryFactory(em);

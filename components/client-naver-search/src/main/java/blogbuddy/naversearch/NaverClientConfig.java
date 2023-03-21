@@ -5,6 +5,7 @@ import feign.Feign;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import feign.okhttp.OkHttpClient;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.openfeign.support.SpringMvcContract;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 class NaverClientConfig {
     @Bean
     public NaverClient naverSearchClient(
-            ObjectMapper objectMapper,
+            @Qualifier("naverObjectMapper") ObjectMapper objectMapper,
             NaverClientInterceptor naverClientInterceptor,
             NaverClientErrorDecoder naverClientErrorDecoder,
             @Value("${client.naver.url}") String url) {
