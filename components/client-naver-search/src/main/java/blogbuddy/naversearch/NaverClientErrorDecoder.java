@@ -3,17 +3,20 @@ package blogbuddy.naversearch;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Response;
 import feign.codec.ErrorDecoder;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Map;
 
-@RequiredArgsConstructor
 @Component
-public class NaverClientErrorDecoder implements ErrorDecoder {
+class NaverClientErrorDecoder implements ErrorDecoder {
     private final ObjectMapper objectMapper;
+
+    public NaverClientErrorDecoder(@Qualifier("naverObjectMapper") final ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     @Override
     public Exception decode(final String methodKey, final Response response) {

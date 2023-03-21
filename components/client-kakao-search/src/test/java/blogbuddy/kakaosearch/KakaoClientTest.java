@@ -1,6 +1,5 @@
 package blogbuddy.kakaosearch;
 
-import blogbuddy.mapper.ObjectMapperConfig;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @TestPropertySource(locations = "classpath:application-test.properties")
 @SpringBootTest(classes = {
         KakaoClientConfig.class,
-        ObjectMapperConfig.class,
+        KakaoObjectMapperConfig.class,
         KakaoClientInterceptor.class,
         KakaoClientErrorDecoder.class
 })

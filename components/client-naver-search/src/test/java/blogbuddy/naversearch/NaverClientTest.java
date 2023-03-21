@@ -1,6 +1,5 @@
 package blogbuddy.naversearch;
 
-import blogbuddy.mapper.ObjectMapperConfig;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @TestPropertySource(locations = "classpath:application-test.properties")
 @SpringBootTest(classes = {
         NaverClientConfig.class,
-        ObjectMapperConfig.class,
+        NaverObjectMapperConfig.class,
         NaverClientInterceptor.class,
         NaverClientErrorDecoder.class
 })

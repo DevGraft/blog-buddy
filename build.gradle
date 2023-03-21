@@ -17,16 +17,16 @@ subprojects {
         mavenCentral()
     }
 
+    bootJar {
+        enabled = false
+    }
+
     dependencies {
         implementation fileTree(dir: 'libs', include: ['*.jar'])
         implementation platform('org.springframework.cloud:spring-cloud-dependencies:2021.0.0')
         implementation 'org.springframework.boot:spring-boot-starter'
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-
-        if (!project.name.contains("support-mapper")) {
-            implementation(project(':features:support-mapper'))
-        }
 
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
