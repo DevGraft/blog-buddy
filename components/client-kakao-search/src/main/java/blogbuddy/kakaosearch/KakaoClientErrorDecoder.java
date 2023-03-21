@@ -12,7 +12,7 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @Component
-public class KakaoClientErrorDecoder implements ErrorDecoder {
+class KakaoClientErrorDecoder implements ErrorDecoder {
     private final ObjectMapper objectMapper;
 
     @Override
