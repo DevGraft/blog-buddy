@@ -11,7 +11,7 @@ import org.springframework.test.context.TestPropertySource;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 @TestPropertySource(locations = "classpath:application-test.properties")
 @SpringBootTest(classes = {
-        ClientConfig.class,
+        KakaoClientConfig.class,
         ObjectMapperConfig.class,
         KakaoClientInterceptor.class,
         KakaoClientErrorDecoder.class

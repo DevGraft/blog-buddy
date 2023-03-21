@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @TestPropertySource(locations = "classpath:application-test.properties")
 @SpringBootTest(classes = {
-        ClientConfig.class,
+        NaverClientConfig.class,
         ObjectMapperConfig.class,
         NaverClientInterceptor.class,
         NaverClientErrorDecoder.class
@@ -24,7 +24,7 @@ class NaverClientTest {
     @DisplayName("클라이언트 API 요청 테스트")
     @Test
     void client_successAPIRequest() throws NaverClientException {
-        final SearchBlogResponse pc = naverClient.searchBlog("PC", null, null, null);
+        final NaverSearchBlogResponse pc = naverClient.searchBlog("PC", null, null, null);
         Assertions.assertThat(pc).isNotNull();
     }
 

@@ -5,10 +5,13 @@ import blogbuddy.kakaosearch.KakaoClientException;
 import blogbuddy.kakaosearch.SearchBlogDocument;
 import blogbuddy.kakaosearch.SearchBlogMeta;
 import blogbuddy.kakaosearch.SearchBlogResponse;
+import blogbuddy.naversearch.NaverClient;
+import blogbuddy.naversearch.NaverClientException;
+import blogbuddy.naversearch.NaverSearchBlogItem;
+import blogbuddy.naversearch.NaverSearchBlogResponse;
 import blogbuddy.searchengine.domain.FindBlogPostRequest;
 import blogbuddy.searchengine.domain.FindBlogPostResponse;
 import blogbuddy.support.advice.exception.RequestException;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +22,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -35,6 +39,8 @@ class ExtraFindBlogPostServiceTest {
     private ExtraFindBlogPostService extraBlogPostFindService;
     @Mock
     private KakaoClient mockKakaoClient;
+    @Mock
+    private NaverClient mockNaverClient;
     @Captor
     private ArgumentCaptor<String> queryCaptor;
     @Captor
@@ -43,6 +49,28 @@ class ExtraFindBlogPostServiceTest {
     private ArgumentCaptor<Integer> sizeCaptor;
     @Captor
     private ArgumentCaptor<String> sortCaptor;
+
+    @DisplayName("전달받은 param을 kakaoClient에 전달합니다.")
+    @Test
+    void findBlog_passesParamToKakaoClient() throws KakaoClientException {
+        final String givenQuery = "givenQuery";
+        final int givenPage = 1;
+        final int givenSize = 10;
+        final String givenSort = "recency";
+        final FindBlogPostRequest givenRequest = FindBlogPostRequest.mapped(givenQuery, givenPage, givenSize, givenSort);
+
+        try {
+            extraBlogPostFindService.findBlog(givenRequest);
+        } catch (Throwable ignored) {}
+
+        Mockito.verify(mockKakaoClient, Mockito.times(givenPage))
+                .searchBlog(queryCaptor.capture(), sortCaptor.capture(), pageCaptor.capture(), sizeCaptor.capture());
+
+        assertThat(queryCaptor.getValue()).isEqualTo(givenQuery);
+        assertThat(pageCaptor.getValue()).isEqualTo(givenPage);
+        assertThat(sizeCaptor.getValue()).isEqualTo(givenSize);
+        assertThat(sortCaptor.getValue()).isEqualTo(givenSort);
+    }
 
     @DisplayName("kakao api 호출 실패 시 예외처리가 핸들링되어야합니다.")
     @Test
@@ -62,31 +90,9 @@ class ExtraFindBlogPostServiceTest {
         assertThat(exception.getStatus().value()).isEqualTo(givenStatus);
     }
 
-    @DisplayName("전달받은 param을 kakaoClient에 전달합니다.")
+    @DisplayName("블로그 조회 성공 결과는 반환되어야합니다.(정상 기준/kakao)")
     @Test
-    void findBlog_passesParamToKakaoClient() throws KakaoClientException {
-        final String givenQuery = "givenQuery";
-        final int givenPage = 1;
-        final int givenSize = 10;
-        final String givenSort = "recency";
-        final FindBlogPostRequest givenRequest = FindBlogPostRequest.mapped(givenQuery, givenPage, givenSize, givenSort);
-
-        try {
-            extraBlogPostFindService.findBlog(givenRequest);
-        } catch (Throwable ignored) {}
-
-        Mockito.verify(mockKakaoClient, Mockito.times(givenPage))
-                .searchBlog(queryCaptor.capture(), sortCaptor.capture(), pageCaptor.capture(), sizeCaptor.capture());
-
-        Assertions.assertThat(queryCaptor.getValue()).isEqualTo(givenQuery);
-        Assertions.assertThat(pageCaptor.getValue()).isEqualTo(givenPage);
-        Assertions.assertThat(sizeCaptor.getValue()).isEqualTo(givenSize);
-        Assertions.assertThat(sortCaptor.getValue()).isEqualTo(givenSort);
-    }
-
-    @DisplayName("블로그 조회 성공 결과는 반환되어야합니다.(kakaoClient기준)")
-    @Test
-    void findBlog_kakaoClient_returnValue() throws KakaoClientException {
+    void findBlog_returnValue() throws KakaoClientException {
         final FindBlogPostRequest givenRequest = FindBlogPostRequest.mapped("givenQuery", null, null, null);
         final SearchBlogMeta givenMeta = new SearchBlogMeta(1, 1, true);
         final SearchBlogDocument givenDocument = new SearchBlogDocument("title", "contents", "url", "blogName", "thumbnail", OffsetDateTime.now());
@@ -110,5 +116,53 @@ class ExtraFindBlogPostServiceTest {
         assertThat(response.documents().get(0).url()).isEqualTo(givenResponse.getDocuments().get(0).getUrl());
         assertThat(response.documents().get(0).thumbnail()).isEqualTo(givenResponse.getDocuments().get(0).getThumbnail());
         assertThat(response.documents().get(0).datetime()).isEqualTo(givenResponse.getDocuments().get(0).getDatetime());
+    }
+
+    @DisplayName("카카오 Api 호출에 문제가 생겼을 경우 Naver Api 호출합니다.")
+    @Test
+    void findBlog_apiCallError_route_naver() throws KakaoClientException, NaverClientException {
+        final String givenQuery = "givenQuery";
+        final Integer givenPage = 1;
+        final Integer givenSize = 10;
+        final String givenSort = "recency";
+
+        final FindBlogPostRequest givenRequest = FindBlogPostRequest.mapped(givenQuery, givenPage, givenSize, givenSort);
+        BDDMockito.given(mockKakaoClient.searchBlog(any(), any(), any(), any()))
+                .willThrow(KakaoClientException.mapped(HttpStatus.INTERNAL_SERVER_ERROR.value(), "ErrorType", "호출 에러"));
+        try {
+            extraBlogPostFindService.findBlog(givenRequest);
+        } catch (Throwable ignore) {}
+
+        Mockito.verify(mockNaverClient, Mockito.times(1))
+                .searchBlog(queryCaptor.capture(), sizeCaptor.capture(), pageCaptor.capture(), sortCaptor.capture());
+
+        assertThat(queryCaptor.getValue()).isEqualTo(givenQuery);
+        assertThat(pageCaptor.getValue()).isEqualTo(givenPage);
+        assertThat(sizeCaptor.getValue()).isEqualTo(givenSize);
+        assertThat(sortCaptor.getValue()).isEqualTo(givenSort);
+    }
+
+    @DisplayName("Naver Api 호출 결과를 형식에 맞추어 반환합니다.")
+    @Test
+    void findBlog_returnNaverApiValue() throws KakaoClientException, NaverClientException {
+        final FindBlogPostRequest givenRequest = FindBlogPostRequest.mapped("givenQuery", null, null, null);
+        final NaverSearchBlogItem givenItem = new NaverSearchBlogItem("title", "link", "desc", "bloggerName", "bloggerLink", "postDate");
+        final NaverSearchBlogResponse givenResponse = new NaverSearchBlogResponse(100, 1, 10, "", List.of(givenItem));
+        BDDMockito.given(mockKakaoClient.searchBlog(any(), any(), any(), any()))
+                .willThrow(KakaoClientException.mapped(HttpStatus.INTERNAL_SERVER_ERROR.value(), "ErrorType", "호출 에러"));
+        BDDMockito.given(mockNaverClient.searchBlog(any(), any(), any(), any()))
+                .willReturn(givenResponse);
+
+        final FindBlogPostResponse response = extraBlogPostFindService.findBlog(givenRequest);
+
+        assertThat(response.meta()).isNotNull();
+        assertThat(response.meta().totalCount()).isEqualTo(givenResponse.getTotal());
+        assertThat(response.meta().pageableCount()).isEqualTo((givenResponse.getTotal() + givenResponse.getDisplay() - 1) / givenResponse.getDisplay());
+        assertThat(response.meta().isEnd()).isFalse();
+        assertThat(response.documents()).isNotEmpty();
+        assertThat(response.documents().get(0).title()).isEqualTo(givenItem.getTitle());
+        assertThat(response.documents().get(0).url()).isEqualTo(givenItem.getLink());
+        assertThat(response.documents().get(0).blogName()).isEqualTo(givenItem.getBloggerName());
+        assertThat(response.documents().get(0).contents()).isEqualTo(givenItem.getDescription());
     }
 }
