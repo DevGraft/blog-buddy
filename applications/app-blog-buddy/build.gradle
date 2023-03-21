@@ -1,6 +1,5 @@
 dependencies {
-    implementation(project(':components:module-search-engine'))
-    implementation(project(':components:module-search-history'))
+    implementation(project(':components:module-blog'))
 
     runtimeOnly 'com.h2database:h2'
     testRuntimeOnly 'com.h2database:h2'
