@@ -13,6 +13,7 @@ import blogbuddy.support.advice.exception.RequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 @RequiredArgsConstructor
 @Component
@@ -27,7 +28,7 @@ public class ExtraFindBlogPostService implements FindBlogPostService {
         } catch (KakaoClientException e) {
             if (HttpStatus.INTERNAL_SERVER_ERROR.value() <= e.getStatus()) {
                 try {
-                    final NaverSearchBlogResponse naverSearchBlogResponse = naverClient.searchBlog(request.getQuery(), request.getSize(), request.getPage(), request.getSort());
+                    final NaverSearchBlogResponse naverSearchBlogResponse = naverClient.searchBlog(request.getQuery(), request.getSize(), request.getPage(), getNaverSort(request.getSort()));
                     return FindBlogPostResponseProvider.mapped(naverSearchBlogResponse);
                 } catch (NaverClientException ex) {
                     throw RequestException.of(HttpStatus.valueOf(ex.getStatus()), ex.getMessage());
@@ -36,5 +37,20 @@ public class ExtraFindBlogPostService implements FindBlogPostService {
             }
             throw RequestException.of(HttpStatus.valueOf(e.getStatus()), e.getMessage());
         }
+    }
+
+    /**
+     * NaverClient에 맞는 정렬 키워드로 변경.
+     * @param sort 정렬 키워드 (accuracy, recency)
+     * @return sort, "sim", "date"
+     */
+    private String getNaverSort(final String sort) {
+        if (!StringUtils.hasText(sort)) return sort;
+
+        return switch (sort) {
+            case "accuracy" -> "sim";
+            case "recency" -> "date";
+            default -> sort;
+        };
     }
 }
