@@ -12,7 +12,7 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @Component
-public class NaverClientErrorDecoder implements ErrorDecoder {
+class NaverClientErrorDecoder implements ErrorDecoder {
     private final ObjectMapper objectMapper;
 
     @Override

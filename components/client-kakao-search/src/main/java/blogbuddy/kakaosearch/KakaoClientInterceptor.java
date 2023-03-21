@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class KakaoClientInterceptor implements RequestInterceptor {
+class KakaoClientInterceptor implements RequestInterceptor {
     @Value("${client.kakao.app-key}")
     private  String appKey;
     @Override

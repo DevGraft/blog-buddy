@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
-public class NaverClientInterceptor implements RequestInterceptor {
+class NaverClientInterceptor implements RequestInterceptor {
     @Value("${client.naver.client-id}")
     private String clientId;
     @Value("${client.naver.secret}")

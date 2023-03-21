@@ -15,7 +15,7 @@ public class FindBlogPostRequest {
     private final Integer size;
     private final String sort;
     public static FindBlogPostRequest mapped(final String keyword, final Integer page, final Integer size, final String sort) {
-        return FindBlogPostRequest.builder()
+        return builder()
                 .query(keyword)
                 .page(page)
                 .size(size)
