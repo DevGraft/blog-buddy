@@ -23,7 +23,7 @@ class KakaoClientTest {
     @DisplayName("kakao api 실제 호출 테스트")
     @Test
     void searchBlog_callTest() throws KakaoClientException {
-        final SearchBlogResponse response = kakaoClient.searchBlog("테스트", null, 1, 10);
+        final KakaoSearchBlogResponse response = kakaoClient.searchBlog("테스트", null, 1, 10);
         Assertions.assertThat(response).isNotNull();
     }
 

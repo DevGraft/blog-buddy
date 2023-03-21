@@ -2,7 +2,7 @@ package blogbuddy.searchengine.infra;
 
 import blogbuddy.kakaosearch.KakaoClient;
 import blogbuddy.kakaosearch.KakaoClientException;
-import blogbuddy.kakaosearch.SearchBlogResponse;
+import blogbuddy.kakaosearch.KakaoSearchBlogResponse;
 import blogbuddy.naversearch.NaverClient;
 import blogbuddy.naversearch.NaverClientException;
 import blogbuddy.naversearch.NaverSearchBlogResponse;
@@ -22,8 +22,8 @@ public class ExtraFindBlogPostService implements FindBlogPostService {
     @Override
     public FindBlogPostResponse findBlog(final FindBlogPostRequest request) {
         try {
-            final SearchBlogResponse searchBlogResponse = kakaoClient.searchBlog(request.getQuery(), request.getSort(), request.getPage(), request.getSize());
-            return FindBlogPostResponseProvider.mapped(searchBlogResponse);
+            final KakaoSearchBlogResponse kakaoSearchBlogResponse = kakaoClient.searchBlog(request.getQuery(), request.getSort(), request.getPage(), request.getSize());
+            return FindBlogPostResponseProvider.mapped(kakaoSearchBlogResponse);
         } catch (KakaoClientException e) {
             if (HttpStatus.INTERNAL_SERVER_ERROR.value() <= e.getStatus()) {
                 try {

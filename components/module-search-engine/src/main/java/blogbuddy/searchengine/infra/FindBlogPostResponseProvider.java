@@ -1,6 +1,6 @@
 package blogbuddy.searchengine.infra;
 
-import blogbuddy.kakaosearch.SearchBlogResponse;
+import blogbuddy.kakaosearch.KakaoSearchBlogResponse;
 import blogbuddy.naversearch.NaverSearchBlogResponse;
 import blogbuddy.searchengine.domain.FindBlogPostDocument;
 import blogbuddy.searchengine.domain.FindBlogPostMeta;
@@ -12,7 +12,7 @@ import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FindBlogPostResponseProvider {
-    public static FindBlogPostResponse mapped(final SearchBlogResponse response) {
+    public static FindBlogPostResponse mapped(final KakaoSearchBlogResponse response) {
         final FindBlogPostMeta meta = new FindBlogPostMeta(
                 response.getMeta().getTotalCount(),
                 response.getMeta().getPageableCount(),

@@ -2,9 +2,9 @@ package blogbuddy.searchengine.infra;
 
 import blogbuddy.kakaosearch.KakaoClient;
 import blogbuddy.kakaosearch.KakaoClientException;
-import blogbuddy.kakaosearch.SearchBlogDocument;
-import blogbuddy.kakaosearch.SearchBlogMeta;
-import blogbuddy.kakaosearch.SearchBlogResponse;
+import blogbuddy.kakaosearch.KakaoSearchBlogDocument;
+import blogbuddy.kakaosearch.KakaoSearchBlogMeta;
+import blogbuddy.kakaosearch.KakaoSearchBlogResponse;
 import blogbuddy.naversearch.NaverClient;
 import blogbuddy.naversearch.NaverClientException;
 import blogbuddy.naversearch.NaverSearchBlogItem;
@@ -94,10 +94,10 @@ class ExtraFindBlogPostServiceTest {
     @Test
     void findBlog_returnValue() throws KakaoClientException {
         final FindBlogPostRequest givenRequest = FindBlogPostRequest.mapped("givenQuery", null, null, null);
-        final SearchBlogMeta givenMeta = new SearchBlogMeta(1, 1, true);
-        final SearchBlogDocument givenDocument = new SearchBlogDocument("title", "contents", "url", "blogName", "thumbnail", OffsetDateTime.now());
-        final List<SearchBlogDocument> givenDocuments = List.of(givenDocument);
-        final SearchBlogResponse givenResponse = new SearchBlogResponse(givenMeta, givenDocuments);
+        final KakaoSearchBlogMeta givenMeta = new KakaoSearchBlogMeta(1, 1, true);
+        final KakaoSearchBlogDocument givenDocument = new KakaoSearchBlogDocument("title", "contents", "url", "blogName", "thumbnail", OffsetDateTime.now());
+        final List<KakaoSearchBlogDocument> givenDocuments = List.of(givenDocument);
+        final KakaoSearchBlogResponse givenResponse = new KakaoSearchBlogResponse(givenMeta, givenDocuments);
         BDDMockito.given(mockKakaoClient.searchBlog(any(), any(), any(), any()))
                 .willReturn(givenResponse);
 
