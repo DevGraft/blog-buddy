@@ -37,7 +37,6 @@ subprojects {
     }
 
     clean {
-        delete 'out'
         delete 'src/main/generated'
     }
 }
