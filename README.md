@@ -109,7 +109,7 @@ $ curl 'localhost:8080/search/most-searched-blogs' -i -X GET
   "data": {
     "blogs": [
       {
-        "keyword": "sdasda",
+        "keyword": "kakao Landing",
         "count": 17
       }
     ]
