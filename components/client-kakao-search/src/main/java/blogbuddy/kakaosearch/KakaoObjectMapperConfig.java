@@ -17,7 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 @Configuration
-public class KakaoObjectMapperConfig {
+class KakaoObjectMapperConfig {
     @Bean(name = "kakaoObjectMapper")
     public ObjectMapper objectMapper() {
         final SimpleModule offsetDateTimeModule = new SimpleModule();

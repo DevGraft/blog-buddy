@@ -3,7 +3,7 @@ package blogbuddy.kakaosearch;
 import lombok.Getter;
 
 @Getter
-public class KakaoClientException extends Exception {
+public class KakaoClientException extends RuntimeException {
     private final int status;
     private final String errorType;
     private final String message;
