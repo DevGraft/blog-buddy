@@ -18,15 +18,15 @@
 
 **🌱 의존성 * 오픈소스 사용 목록**
 
-| Source                          | Description                                                      |
-|:--------------------------------|:-----------------------------------------------------------------|
-| spring-boot-stater-web          | 웹 애플리케이션 스타터 패키지                                                 |
-| spring-boot-stater-data-jpa     | jpa 사용을 위한 의존성                                                   |
-| com.querydsl:querydsl-jpa       | jpa기반 Querydsl 기능을 제공하는 모듈.<br>해당 모듈을 통해 인기 검색어 목록 기능 개발         |
-| com.querydsl:querydsl-apt       | Querydsl에서 사용하는 어노테이션 프로세서를 적용하기 위한 의존성                          |
-| spring-cloud-starter-openfeign  | Feign HTTP Client 제공.<br>해당 기능을 통해 kakao, naver 통신 클라이언트 개발      |
-| github.openfeign:feign-okhttp   | Feign HTTP Client 기본 HTTP(URLConnection)을 대체하기 위한 OkHttp Client. |
-| github.openfeign:feign-jackson  | Feign HTTP Client에서 JSON 데이터 처리를 위한 의존성                          |
+| Source                                                                                                                        | Description                                                      |
+|:------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------------------------------|
+| [spring-boot-stater-web](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web)                 | 웹 애플리케이션 스타터 패키지                                                 |
+| [spring-boot-stater-data-jpa](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa)       | jpa 사용을 위한 의존성                                                   |
+| [com.querydsl:querydsl-jpa](https://mvnrepository.com/artifact/com.querydsl/querydsl-jpa)                                     | jpa기반 Querydsl 기능을 제공하는 모듈.<br>해당 모듈을 통해 인기 검색어 목록 기능 개발         |
+| [com.querydsl:querydsl-apt](https://mvnrepository.com/artifact/com.querydsl/querydsl-apt)                                     | Querydsl에서 사용하는 어노테이션 프로세서를 적용하기 위한 의존성                          |
+| [spring-cloud-starter-openfeign](https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-openfeign) | Feign HTTP Client 제공.<br>해당 기능을 통해 kakao, naver 통신 클라이언트 개발      |
+| [github.openfeign:feign-okhttp](https://mvnrepository.com/artifact/io.github.openfeign/feign-okhttp)                          | Feign HTTP Client 기본 HTTP(URLConnection)을 대체하기 위한 OkHttp Client. |
+| [github.openfeign:feign-jackson](https://mvnrepository.com/artifact/io.github.openfeign/feign-jackson)                        | Feign HTTP Client에서 JSON 데이터 처리를 위한 의존성                          |
 
 ## 📬 2. API 명세
 
