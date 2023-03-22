@@ -33,7 +33,7 @@
 ### 🔎 블로그 검색
 
 ```
-$ curl 'http://localhost:8080/search/blog?keyword=kakao?page=1?size=10?sort=accrucy' -i -X GET
+$ curl 'http://localhost:8080/search/blog?keyword=kakao?page=1?size=10?sort=accuracy' -i -X GET
 ```
 
 **요청 정보**
@@ -43,7 +43,7 @@ $ curl 'http://localhost:8080/search/blog?keyword=kakao?page=1?size=10?sort=accr
 | keyword   | true     | 블로그 검색 질의어        |                        |
 | page      | false    | 검색된 총 문서 페이지      | 1~50                   |
 | size      | false    | 한 페이지에 보일 수 있는 크기 | 1~50                   |
-| sort      | false    | 문서 정렬 방법(기본 정확도순) | accrucy=정확도순, asda=최신순 |
+| sort      | false    | 문서 정렬 방법(기본 정확도순) | accuracy=정확도순, recency=최신순 |
 
 **요청 결과 예시**
 
