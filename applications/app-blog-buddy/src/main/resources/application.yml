@@ -8,6 +8,11 @@ spring:
   profiles:
     group:
       default: h2
+
+logging:
+  level:
+    org.springframework.transaction.interceptor: TRACE
+
 client:
   kakao:
     url: https://dapi.kakao.com

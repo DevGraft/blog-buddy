@@ -3,7 +3,7 @@ package blogbuddy.naversearch;
 import lombok.Getter;
 
 @Getter
-public class NaverClientException extends Exception {
+public class NaverClientException extends RuntimeException {
     private final int status;
     private final String errorCode; // SE01, SE02, SE03, SE04, SE05, SE99
     private final String errorMessage;

@@ -4,3 +4,7 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
     testRuntimeOnly 'com.h2database:h2'
 }
+
+bootJar {
+    enabled = true
+}
