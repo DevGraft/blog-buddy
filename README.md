@@ -38,11 +38,11 @@ $ curl 'http://localhost:8080/search/blog?keyword=kakao?page=1?size=10?sort=accu
 
 **요청 정보**
 
-| Parameter | Required | Description       | Forms                  |
-|:----------|:---------|:------------------|:-----------------------
-| keyword   | true     | 블로그 검색 질의어        |                        |
-| page      | false    | 검색된 총 문서 페이지      | 1~50                   |
-| size      | false    | 한 페이지에 보일 수 있는 크기 | 1~50                   |
+| Parameter | Required | Description       | Forms                      |
+|:----------|:---------|:------------------|:---------------------------
+| keyword   | true     | 블로그 검색 질의어        | 공백, 빈값 불가능                 |
+| page      | false    | 검색된 총 문서 페이지      | 1~50 입력                    |
+| size      | false    | 한 페이지에 보일 수 있는 크기 | 1~50 입력                    |
 | sort      | false    | 문서 정렬 방법(기본 정확도순) | accuracy=정확도순, recency=최신순 |
 
 **요청 결과 예시**
